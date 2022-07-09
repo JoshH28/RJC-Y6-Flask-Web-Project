@@ -27,7 +27,11 @@ class Order(db.Model):
 
 @app.route('/')
 def index():
-    return render_template('base.html')
+    return render_template('HomePage.html')
+
+@app.route('/DrinkStall.html')
+def DrinkStall():
+    return render_template('DrinkStall.html')
 
 if __name__ == "__main__":
-    app.run(Debug=True)
+    app.run(debug=True)

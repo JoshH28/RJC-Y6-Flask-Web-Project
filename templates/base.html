@@ -1,14 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <style>
-        .mainTitle{font-family: Arial, Helvetica, sans-serif;}
-        .basicText{font-family: Arial, Helvetica, sans-serif;}
-    </style>
-
-    <title>AndersonOrders - {% block title %}</title>
+	<meta charset="UTF-8">
+	<style>
+		.mainTitle{font-family: Arial, Helvetica, sans-serif;}
+		.basicText{font-family: Arial, Helvetica, sans-serif;}
+	</style>
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+	<title>AndersonOrders - Ordering Made Easier</title>
+	{% block head %} {% endblock %}
 </head>
 
 <body>
-    <h1 class="mainTitle">AndersonOrders - Ordering made easier</h1>
-    <hr>
-    {% block content %}
+	<h1 class="mainTitle">AndersonOrders - Ordering Made Easier</h1>
+	<hr>
+	{% block body %} {% endblock %}
 </body>
+</html>

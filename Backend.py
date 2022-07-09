@@ -19,7 +19,7 @@ class Account(db.Model):
 class Order(db.Model):
     username = db.Column(db.String(100), unique=True, nullable=False)
     stall_id = db.Column(db.Integer, unique=True, primary_key=True)
-    food_id = db.Column(db.Integer, unqiue=True, primary_key=True)
+    food_id = db.Column(db.Integer, unique=True, primary_key=True)
     order_id = db.Column(db.Integer, unique=True, primary_key=True)
 
     def __repr__(self):
@@ -27,7 +27,7 @@ class Order(db.Model):
 
 @app.route('/')
 def index():
-    return render_template('HomePage.html')
+    return render_template('base.html')
 
 if __name__ == "__main__":
     app.run(Debug=True)

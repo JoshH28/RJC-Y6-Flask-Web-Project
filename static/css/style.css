@@ -1,0 +1,19 @@
+body {
+  background-color: #f0dcb6;
+}
+
+.center {
+    display: block;
+    margin: auto;
+    border-radius: 10px;
+    width: 50%;
+    text-align: center;
+}
+
+.padding {
+    padding: 10px;
+}
+
+.margin {
+    margin-top: 25px;
+}

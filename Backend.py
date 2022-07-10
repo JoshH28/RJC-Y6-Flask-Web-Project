@@ -26,6 +26,10 @@ class Order(db.Model):
         return '<Order %r>' % self.order_id
 
 @app.route('/')
+def login():
+    return render_template('login.html')
+
+@app.route('/HomePage.html')
 def HomePage():
     return render_template('HomePage.html')
 

@@ -1,61 +1,63 @@
+{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+{% block head %}
+    <link rel="stylesheet" href="../static/css/DrinkStall.css">
+{% endblock %}
 
-<head>
-    <link rel="stylesheet" href="drinkstall.css">
-    <title>AndersonOrders - Home Page</title>
-</head>
-
-<body class="margin-0">
+{% block body %}
     <div class="nav">
         <h1 class="mainTitle">Drink Stall</h1>
-        <img src="schoollogo.png" alt="school logo" class="logo">
-        <a href=""><img src="cartIcon.png" alt="cart" class="cart"></a>
+        <img src="../static/assets/schoollogo.png" alt="school logo" class="logo">
+        <a href="cart.html"><img src="../static/assets/cartIcon.png" alt="cart" class="cart"></a>
         <div class="logout">
-            <p class="basicText" style="margin:12% auto">log out</p>
+            <p class="basicText" style="margin:12% auto">Log out</p>
         </div>
     </div>
     <h2 class="stalltitle">Item<h2>
     <div class="flex">
         <div class="stall">
-            <a href="drinks.html" class="stalltext">Coke</a> 
+            <a href="../static/assets/coke.jpg" class="stalltext">Coke</a> 
             <p class="stalltext2">$1.00</p>
             <div class="addToCart">
-                <a href="">add to cart</a>
+                <a href="cart.html">Add to cart</a>
             </div>
         </div>
         <div class="stall">
-            <a href="drinks.html" class="stalltext">Coffee</a> 
+            <a href="../static/assets/coffee.jpg" class="stalltext">Coffee</a> 
             <p class="stalltext2">$1.20</p>
             <div class="addToCart">
-                <a href="">add to cart</a>
+                <a href="cart.html">Add to cart</a>
             </div>
         </div>
         <div class="stall">
-            <a href="drinks.html" class="stalltext">Green Tea</a> 
+            <a href="../static/assets/greentea.jpg" class="stalltext">Green Tea</a> 
             <p class="stalltext2">$1.50</p>
             <div class="addToCart">
-                <a href="">add to cart</a>
+                <a href="cart.html">Add to cart</a>
             </div>
         </div>
         <div class="stall">
-            <a href="drinks.html" class="stalltext">Water</a> 
+            <a href="../static/assets/waterbottle.jpg" class="stalltext">Water</a> 
             <p class="stalltext2">$0.60</p>
             <div class="addToCart">
-                <a href="">add to cart</a>
+                <a href="cart.html">Add to cart</a>
             </div>
         </div>
         <div class="stall">
-            <a href="drinks.html" class="stalltext">Milk Tea</a> 
+            <a href="../static/assets/milktea.jpg" class="stalltext">Milk Tea</a> 
             <p class="stalltext2">$1.50</p>
             <div class="addToCart">
-                <a href="">add to cart</a>
+                <a href="cart.html">Add to cart</a>
             </div>
         </div>
         <div class="stall">
-            <a href="drinks.html" class="stalltext">Milo</a> 
+            <a href="../static/assets/milo.jpg" class="stalltext">Milo</a> 
             <p class="stalltext2">$1.00</p>
             <div class="addToCart">
-                <a href="">add to cart</a>
+                <a href="cart.html">Add to cart</a>
             </div>
         </div>
     </div>
-</body>
+{% endblock %}
+</html>

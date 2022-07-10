@@ -26,12 +26,16 @@ class Order(db.Model):
         return '<Order %r>' % self.order_id
 
 @app.route('/')
-def index():
+def HomePage():
     return render_template('HomePage.html')
 
 @app.route('/DrinkStall.html')
 def DrinkStall():
     return render_template('DrinkStall.html')
+
+@app.route('/cart.html')
+def cart():
+    return render_template('cart.html')
 
 if __name__ == "__main__":
     app.run(debug=True)

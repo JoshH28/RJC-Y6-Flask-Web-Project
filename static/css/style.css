@@ -86,3 +86,10 @@
     padding-top: 70%;
     font-size: 40%;
 }
+
+.cart{
+    position: absolute;
+    top: 2%;
+    right: 9%;
+    height: 4%;
+}

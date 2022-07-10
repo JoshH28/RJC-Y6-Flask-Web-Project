@@ -1,13 +1,13 @@
+{% extends 'base.html' %}
 
-<head>
-    <link rel="stylesheet" href="stallowner.css">
-    <title>AndersonOrders - Home Page</title>
-</head>
+{% block head %}
+    <link rel="stylesheet" href="../static/css/stallowner.css">
+{% endblock %}
 
-<body class="margin-0">
+{% block body %}
     <div class="nav">
         <h1 class="mainTitle">Cart</h1>
-        <img src="schoollogo.png" alt="school logo" class="logo">
+        <img src="../static/assets/schoollogo.png" alt="school logo" class="logo">
         <div class="logout">
             <p class="basicText" style="margin:12% auto">log out</p>
         </div>
@@ -18,37 +18,37 @@
             <p class="stalltext">Coke</p> 
             <p class="smalltext2">x1</p>
             <p class="smalltext3">$1.00</p>
-            <img src="tickIcon.png" alt="" class="cancel">
+            <img src="../static/assets/tickIcon.png" alt="" class="cancel">
         </div>
         <div class="stall">
             <p class="stalltext">Milk Tea</p> 
             <p class="smalltext2">x1</p>
             <p class="smalltext3">$1.50</p>
-            <img src="tickIcon.png" alt="" class="cancel">
+            <img src="../static/assets/tickIcon.png" alt="" class="cancel">
         </div>
         <div class="stall">
             <p class="stalltext">Milo</p> 
             <p class="smalltext2">x1</p>
             <p class="smalltext3">$1.20</p>
-            <img src="tickIcon.png" alt="" class="cancel">
+            <img src="../static/assets/tickIcon.png" alt="" class="cancel">
         </div>
         <div class="stall">
             <p class="stalltext">Water</p> 
             <p class="smalltext2">x1</p>
             <p class="smalltext3">$0.60</p>
-            <img src="tickIcon.png" alt="" class="cancel">
+            <img src="../static/assets/tickIcon.png" alt="" class="cancel">
         </div>
         <div class="stall">
             <p class="stalltext">Coke</p> 
             <p class="smalltext2">x1</p>
             <p class="smalltext3">$1.00</p>
-            <img src="tickIcon.png" alt="" class="cancel">
+            <img src="../static/assets/tickIcon.png" alt="" class="cancel">
         </div>
         <div class="stall">
             <p class="stalltext">Coke</p> 
             <p class="smalltext2">x1</p>
             <p class="smalltext3">$1.00</p>
-            <img src="tickIcon.png" alt="" class="cancel">
+            <img src="../static/assets/tickIcon.png" alt="" class="cancel">
         </div>
     </div>
-</body>
+{% endblock %}

@@ -42,7 +42,8 @@ def login():
         if account_exists:
             return redirect('/HomePage.html')
 
-        return render_template('login.html')
+        # Incorrect username and password combination
+        return render_template('login.html', incorrect=True)
 
         # new_account = Account(username=new_username, password=new_password)
 
@@ -54,7 +55,7 @@ def login():
         #     return 'There was an issue logging in :(\nContact us if there are any problems!'
 
     else: # Get
-        return render_template('login.html')
+        return render_template('login.html', incorrect=False)
 
 
 # Home page

@@ -4,6 +4,11 @@
 	box-sizing: border-box;
 }
 
+.incorrect {
+	font-size: 80%;
+	color: red;
+}
+
 body{
     font-family: 'Poppins', sans-serif;
     overflow: hidden;
@@ -148,12 +153,12 @@ form{
 }
 
 a{
-	display: block;
+	display: inline-block;
 	text-align: right;
 	text-decoration: none;
 	color: #999;
 	font-size: 0.9rem;
-	transition: .3s;
+	transition: .3s;	
 }
 
 a:hover{

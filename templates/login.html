@@ -36,7 +36,11 @@
            		    	<input type="password" class="input" name="password">
             	   </div>
             	</div>
-            	<a href="#">Forgot Password?</a>
+				{% if incorrect %}
+					<div class="incorrect">Incorrect username and password combination</div>
+				{% endif %}
+				<a href="">Don't have an accoount? Create one!</a>
+            	<a href="#">Forgot password?</a>
             	<input type="submit" class="btn" value="Login">
             </form>
         </div>

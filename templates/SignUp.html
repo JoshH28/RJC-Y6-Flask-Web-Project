@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>AndersonOrders - Ordering Made Easier</title>
+	<link rel="stylesheet" type="text/css" href="../static/css/login.css">
+	<link href="https://fonts.googleapis.com/css?family=Poppins:600&display=swap" rel="stylesheet">
+	<script src="https://kit.fontawesome.com/a81368914c.js"></script>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	<img class="wave" src="../static/assets/wave.png">
+	<div class="container">
+		<div class="img">
+			<img src="../static/assets/bg.svg">
+		</div>
+		<div class="login-content">
+			<form method="POST">
+				<img src="../static/assets/avatar.svg">
+				<h2 class="title">Sign-up</h2>
+           		<div class="input-div one">
+           		   <div class="i">
+           		   		<i class="fas fa-user"></i>
+           		   </div>
+           		   <div class="div">
+           		   		<h5>Enter new username</h5>
+           		   		<input type="text" class="input" name="username">
+           		   </div>
+           		</div>
+                <div class="input-div one">
+           		   <div class="i">
+           		   		<i class="fas fa-user"></i>
+           		   </div>
+           		   <div class="div">
+           		   		<h5>Enter new email (Student icon)</h5>
+           		   		<input type="text" class="input" name="email">
+           		   </div>
+           		</div>
+           		<div class="input-div pass">
+           		   <div class="i"> 
+           		    	<i class="fas fa-lock"></i>
+           		   </div>
+           		   <div class="div">
+           		    	<h5>Enter password</h5>
+           		    	<input type="password" class="input" name="password">
+            	   </div>
+            	</div>
+           		<div class="input-div pass">
+           		   <div class="i"> 
+           		    	<i class="fas fa-lock"></i>
+           		   </div>
+           		   <div class="div">
+           		    	<h5>Re-Enter password</h5>
+           		    	<input type="password" class="input" name="repassword">
+            	   </div>
+            	</div>
+                {% if username_taken or not password_correct or not pass_len %}
+    				{% if username_taken %}
+    					<div class="incorrect">Username is already taken</div>
+    				{% endif %}
+    				{% if invalid_email %}
+    					<div class="incorrect">Invalid email</div>
+    				{% endif %}
+    				{% if email_taken %}
+    					<div class="incorrect">Email is already taken</div>
+    				{% endif %}
+    				{% if not password_correct %}
+    					<div class="incorrect">Passwords do not match!</div>
+    				{% endif %}
+    				{% if not pass_len %}
+    					<div class="incorrect">Password length must be atleast 8 characters long!</div>
+    				{% endif %}
+    				{% if whitespace %}
+    					<div class="incorrect">Password must not contain any whitespaces!</div>
+    				{% endif %}
+                {% endif %}
+            	<input type="submit" class="btn" value="Sign-Up">
+            </form>
+        </div>
+    </div>
+    <script type="text/javascript" src="../static/scripts/login.js"></script>
+</body>
+</html>

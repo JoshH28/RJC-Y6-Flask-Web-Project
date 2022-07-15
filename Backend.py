@@ -1,14 +1,21 @@
-from flask import Flask, redirect, url_for, request, render_template, flash
+from flask import Flask, redirect, url_for, request, render_template, flash, abort
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import exists
 from secrets import choice
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, login_user, LoginManager, logout_user, login_required
 import string
+import datetime
+import smtplib
+import os
+from email.message import EmailMessage
+
+EMAIL_PASSWORD = os.environ.get("EMAIL_PASSWORD")
+EMAIL_ADDRESS = os.environ.get("EMAIL_ADDRESS")
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
-app.config['SECRET_KEY'] = 'AMOS'
+app.config['SECRET_KEY'] = "AMOS" # os.environ.get("SECRET_KEY")
 db = SQLAlchemy(app)
 
 alphabets = string.ascii_letters + string.digits + string.punctuation
@@ -24,6 +31,7 @@ def load_user(user_id):
 class Account(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(200), unique=True, nullable=False)
+    user_email = db.Column(db.String(200), unique=True, nullable=False)
     pass_hash = db.Column(db.String(300), nullable=False)
     salt = db.Column(db.String(50), nullable=False)
     # Skip these for now
@@ -45,12 +53,24 @@ class Account(db.Model, UserMixin):
 #     def __repr__(self):
 #         return '<Order %r>' % self.order_id
 
+class Confirmation_Route(db.Model):
+    id = db.Column(db.Integer, unique=True, primary_key=True)
+    username = db.Column(db.String(200), unique=True, nullable=False)
+    route = db.Column(db.String(100), unique=True, nullable=False)
+    time_created = db.Column(db.DateTime, default=datetime.datetime.utcnow()) 
+    email = db.Column(db.String(200), unique=True, nullable=False)
+    pass_hash = db.Column(db.String(300), nullable=False)
+    salt = db.Column(db.String(50), nullable=False)
+
+    def __repr__(self):
+	    return '<Route %r>' % self.route
+
 # Login page
 @app.route('/', methods=['POST', 'GET'])
 def login():
     if request.method == "POST": # Post
-        new_username = request.form['username']
-        new_password = request.form['password']
+        new_username = request.form.get('username')
+        new_password = request.form.get('password')
 
         # disgusting code to check if account alr exists
         account_query = Account.query.filter_by(username=new_username).first()
@@ -72,13 +92,13 @@ def login():
     else: # Get
         return render_template('login.html', incorrect=False)
 
-@app.route('/SignUp.html', methods=['POST', 'GET'])
+@app.route('/SignUp', methods=['POST', 'GET'])
 def signup():
     if request.method == "POST": # Post
-        new_username = request.form['username']
-        new_password = request.form['password']
-        re_password = request.form['repassword']
-        new_email = request.form['email']
+        new_username = request.form.get('username')
+        new_password = request.form.get('password')
+        re_password = request.form.get('repassword')
+        new_email = request.form.get('email')
 
         # disgusting code to check if username alr exists
         account_exists = db.session.query(exists().where(Account.username==new_username)).scalar()
@@ -96,16 +116,36 @@ def signup():
             return render_template('SignUp.html', username_taken=False, password_correct=True, pass_len=True, whitespace=False)
 
         # Successful sign up
-        new_salt = ''.join(choice(alphabets) for i in range(50))
+        
+        # Send email
+        
+        new_route = ''.join(choice(string.ascii_letters) for _ in range(30))
+        while db.session.query(exists().where(Confirmation_Route.route==new_route)).scalar():
+            new_route = ''.join(choice(string.ascii_letters) for _ in range(30))
+            
+        new_salt = ''.join(choice(alphabets) for _ in range(50))
         new_password += new_salt
-        new_account = Account(username=new_username, pass_hash=generate_password_hash(new_password, method = 'sha512'), salt=new_salt)
+        new_confirmation_route = Confirmation_Route(route=new_route, email=new_email, username=new_username, salt=new_salt, pass_hash=generate_password_hash(new_password, method = 'sha512'))
 
         try:
-            db.session.add(new_account)
+            db.session.add(new_confirmation_route)
             db.session.commit()
-            flash("Account made successfully!")
-            login_user(new_account)
-            return redirect(url_for('HomePage'))
+            flash("Success!")
+
+            message = EmailMessage()
+            message['Subject'] = "Verification for your Ande Canteen account"
+            message['From'] = EMAIL_ADDRESS
+            message['To'] = new_email
+            temp = ("You have been registered!\nNot you? Ignore this email and the account will not be created\nEnter AndeCanteen.com/verify/")
+            temp += new_route
+            message.set_content(temp)
+            
+            with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+                smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
+
+                smtp.send_message(message)
+
+            return render_template('SignUp.html', username_taken=False, password_correct=True, pass_len=True)
         except:
             return 'There was an issue logging in :(\nContact us if there are any problems!'
 
@@ -119,22 +159,42 @@ def logout():
     return redirect(url_for('login'))
 
 # Home page
-@app.route('/HomePage.html', methods=['POST', 'GET'])
+@app.route('/HomePage', methods=['POST', 'GET'])
 @login_required
 def HomePage():
     return render_template('HomePage.html')
 
 # Drink stall
-@app.route('/DrinkStall.html')
+@app.route('/DrinkStall')
 @login_required
 def DrinkStall():
     return render_template('DrinkStall.html')
 
 # Cart
-@app.route('/cart.html')
+@app.route('/cart')
 @login_required
 def cart():
     return render_template('cart.html')
+    
+@app.route('/verify/<token>')
+def confirm(token):
+    res = Confirmation_Route.query.filter_by(route=token)
+    result = res.first()
+    if not result or db.session.query(exists().where(Account.username==result.username)).scalar():
+        abort(404)
+    else:
+        try:
+            new_account = Account(username=result.username, user_email=result.email, pass_hash=result.pass_hash, salt=result.salt)
+            db.session.add(new_account)
+            res.delete()
+            db.session.commit()
+            flash('Success!')
+            login_user(new_account)
+            return redirect(url_for('HomePage'))
+        except:
+            res.delete()
+            db.session.commit()
+            return 'There was an error logging in :(\nContact us if there are any problems'
 
 if __name__ == "__main__":
     app.run(debug=True)

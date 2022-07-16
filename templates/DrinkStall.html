@@ -1,61 +1,138 @@
 {% extends 'base.html' %}
 
 {% block head %}
+
+    <!-- custom css file link  -->
     <link rel="stylesheet" href="../static/css/DrinkStall.css">
+
 {% endblock %}
 
 {% block body %}
-    <div class="nav">
-        <h1 class="mainTitle">Drink Stall</h1>
-        <img src="../static/assets/schoollogo.png" alt="school logo" class="logo">
-        <a href="cart.html"><img src="../static/assets/cartIcon.png" alt="cart" class="cart"></a>
-        <div class="logout">
-            <a href="/logout" class="basicText" style="margin:12% auto">Log out</a>
+    
+<!-- dishes section starts  -->
+
+<section class="dishes" id="dishes">
+
+    <br>
+    <br>
+    <br>
+
+    <h1 class="heading"> Food Stall </h1>
+
+    <div class="box-container">
+
+        <div class="box">
+            <a href="#" class="fas fa-heart"></a>
+            <a href="#" class="fas fa-eye"></a>
+            <img src="../static/assets/images/dish-1.png" alt="">
+            <h3>tasty food</h3>
+            <!-- <div class="stars">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+            </div> -->
+            <span>$15.99</span>
+            <a href="#" class="btn">add to cart</a>
         </div>
+
+        <div class="box">
+            <a href="#" class="fas fa-heart"></a>
+            <a href="#" class="fas fa-eye"></a>
+            <img src="../static/assets/images/dish-2.png" alt="">
+            <h3>tasty food</h3>
+            <!-- <div class="stars">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+            </div> -->
+            <span>$15.99</span>
+            <a href="#" class="btn">add to cart</a>
+        </div>
+
+        <div class="box">
+            <a href="#" class="fas fa-heart"></a>
+            <a href="#" class="fas fa-eye"></a>
+            <img src="../static/assets/images/dish-3.png" alt="">
+            <h3>tasty food</h3>
+            <!-- <div class="stars">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+            </div> -->
+            <span>$15.99</span>
+            <a href="#" class="btn">add to cart</a>
+        </div>
+
+        <div class="box">
+            <a href="#" class="fas fa-heart"></a>
+            <a href="#" class="fas fa-eye"></a>
+            <img src="../static/assets/images/dish-4.png" alt="">
+            <h3>tasty food</h3>
+            <!-- <div class="stars">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+            </div> -->
+            <span>$15.99</span>
+            <a href="#" class="btn">add to cart</a>
+        </div>
+
+        <div class="box">
+            <a href="#" class="fas fa-heart"></a>
+            <a href="#" class="fas fa-eye"></a>
+            <img src="../static/assets/images/dish-5.png" alt="">
+            <h3>tasty food</h3>
+            <!-- <div class="stars">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+            </div> -->
+            <span>$15.99</span>
+            <a href="#" class="btn">add to cart</a>
+        </div>
+
+        <div class="box">
+            <a href="#" class="fas fa-heart"></a>
+            <a href="#" class="fas fa-eye"></a>
+            <img src="../static/assets/images/dish-6.png" alt="">
+            <h3>tasty food</h3>
+            <!-- <div class="stars">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+            </div> -->
+            <span>$15.99</span>
+            <a href="#" class="btn">add to cart</a>
+        </div>
+
     </div>
-    <h2 class="stalltitle">Item<h2>
-    <div class="flex">
-        <div class="stall">
-            <a href="../static/assets/coke.jpg" class="stalltext">Coke</a> 
-            <p class="stalltext2">$1.00</p>
-            <div class="addToCart">
-                <a href="cart.html">Add to cart</a>
-            </div>
-        </div>
-        <div class="stall">
-            <a href="../static/assets/coffee.jpg" class="stalltext">Coffee</a> 
-            <p class="stalltext2">$1.20</p>
-            <div class="addToCart">
-                <a href="cart.html">Add to cart</a>
-            </div>
-        </div>
-        <div class="stall">
-            <a href="../static/assets/greentea.jpg" class="stalltext">Green Tea</a> 
-            <p class="stalltext2">$1.50</p>
-            <div class="addToCart">
-                <a href="cart.html">Add to cart</a>
-            </div>
-        </div>
-        <div class="stall">
-            <a href="../static/assets/waterbottle.jpg" class="stalltext">Water</a> 
-            <p class="stalltext2">$0.60</p>
-            <div class="addToCart">
-                <a href="cart.html">Add to cart</a>
-            </div>
-        </div>
-        <div class="stall">
-            <a href="../static/assets/milktea.jpg" class="stalltext">Milk Tea</a> 
-            <p class="stalltext2">$1.50</p>
-            <div class="addToCart">
-                <a href="cart.html">Add to cart</a>
-            </div>
-        </div>
-        <div class="stall">
-            <a href="../static/assets/milo.jpg" class="stalltext">Milo</a> 
-            <p class="stalltext2">$1.00</p>
-            <div class="addToCart">
-                <a href="cart.html">Add to cart</a>
-            </div>
-        </div>
-    </div>
+
+</section>
+
+<!-- dishes section ends -->
+
+
+
+<!-- loader part  -->
+<div class="loader-container">
+    <img src="../static/assets/images/loader.gif" alt="">
+</div>
+
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+<!-- custom js file link  -->
+<script src="../static/scripts/gif_animation.js"></script>
+
 {% endblock %}

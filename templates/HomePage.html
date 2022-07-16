@@ -1,43 +1,132 @@
 {% extends 'base.html' %}
 
 {% block head %}
+    <!-- custom css file link  -->
+    <link rel="stylesheet" href="../static/css/HomePage.css">
 
 {% endblock %}
 
 {% block body %}
-    <div class="nav">
-        <h1 class="mainTitle">Ande Canteen</h1>
-		<img src="../static/assets/schoollogo.png" alt="school logo" class="logo">
-        <a href="cart.html"><img src="static/assets/cartIcon.png" alt="cart" class="cart"></a>
-        <div class="logout">
-            <a href="logout" class="basicText" style="margin:12% auto">Log out</a>
+    
+<!-- dishes section starts  -->
+
+<section class="dishes" id="dishes">
+
+    <br>
+    <br>
+    <br>
+
+    <h1 class="heading"> Stalls </h1>
+
+    <div class="box-container">
+
+        <div class="box">
+            <a href="#" class="fas fa-heart"></a>
+            <a href="#" class="fas fa-eye"></a>
+            <img src="../static/assets/images/sushi.png" alt="">
+            <h3>Japanese Stall</h3>
+            <!-- <div class="stars">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+            </div> -->
+            <a href="#" class="btn">Order</a>
         </div>
+
+        <div class="box">
+            <a href="#" class="fas fa-heart"></a>
+            <a href="#" class="fas fa-eye"></a>
+            <img src="../static/assets/images/chickenRice.png" alt="">
+            <h3>Chicken Rice Stall</h3>
+            <!-- <div class="stars">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+            </div> -->
+            <!-- <span>$15.99</span> -->
+            <a href="#" class="btn">Order</a>
+        </div>
+
+        <div class="box">
+            <a href="#" class="fas fa-heart"></a>
+            <a href="#" class="fas fa-eye"></a>
+            <img src="../static/assets/images/western.png" alt="">
+            <h3>Western Stall</h3>
+            <!-- <div class="stars">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+            </div> -->
+            <a href="#" class="btn">Order</a>
+        </div>
+
+        <div class="box">
+            <a href="#" class="fas fa-heart"></a>
+            <a href="#" class="fas fa-eye"></a>
+            <img src="../static/assets/images/mixed.png" alt="">
+            <h3>Mixed Rice Stall</h3>
+            <!-- <div class="stars">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+            </div> -->
+            <a href="#" class="btn">Order</a>
+        </div>
+
+        <div class="box">
+            <a href="#" class="fas fa-heart"></a>
+            <a href="#" class="fas fa-eye"></a>
+            <img src="../static/assets/images/fruit.png" alt="">
+            <h3>Fruit Stall</h3>
+            <!-- <div class="stars">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+            </div> -->
+            <a href="#" class="btn">Order</a>
+        </div>
+
+        <div class="box">
+            <a href="#" class="fas fa-heart"></a>
+            <a href="#" class="fas fa-eye"></a>
+            <img src="../static/assets/images/drink.png" alt="">
+            <h3>Drink Stall</h3>
+            <!-- <div class="stars">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+            </div> -->
+            <a href="DrinkStall" class="btn">Order</a>
+        </div>
+
     </div>
-    <h2 class="stalltitle">Stalls:<h2>
-    <div class="flex">
-        <div class="stall">
-            <a href="DrinkStall.html" class="stalltext">Drink stall</a> 
-            <p class="stalltext2">*beverage</p>
-        </div>
-        <div class="stall">
-            <a href="DrinkStall.html" class="stalltext">Fruit stall</a> 
-            <p class="stalltext2">*fruit</p>
-        </div>
-        <div class="stall">
-            <a href="DrinkStall.html" class="stalltext">Noodle stall</a> 
-            <p class="stalltext2">*food</p>
-        </div>
-        <div class="stall">
-            <a href="DrinkStall.html" class="stalltext">Japanese stall</a> 
-            <p class="stalltext2">*food</p>
-        </div>
-        <div class="stall">
-            <a href="DrinkStall.html" class="stalltext">Chic Rice stall</a> 
-            <p class="stalltext2">*food</p>
-        </div>
-        <div class="stall">
-            <a href="DrinkStall.html" class="stalltext">Malay stall</a> 
-            <p class="stalltext2">*food</p>
-        </div>
-    </div>
+
+</section>
+
+<!-- dishes section ends -->
+
+
+
+<!-- loader part  -->
+<div class="loader-container">
+    <img src="../static/assets/images/loader.gif" alt="">
+</div>
+
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+<!-- custom js file link  -->
+<script src="../static/scripts/gif_animation.js"></script>
+
 {% endblock %}

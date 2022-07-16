@@ -9,13 +9,16 @@ import datetime
 import smtplib
 import os
 from email.message import EmailMessage
+from dotenv import load_dotenv
 
-EMAIL_PASSWORD = os.environ.get("EMAIL_PASSWORD")
-EMAIL_ADDRESS = os.environ.get("EMAIL_ADDRESS")
+load_dotenv()
+
+EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
+EMAIL_ADDRESS = os.getenv("EMAIL_ADDRESS")
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
-app.config['SECRET_KEY'] = "AMOS" # os.environ.get("SECRET_KEY")
+app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
 db = SQLAlchemy(app)
 
 alphabets = string.ascii_letters + string.digits + string.punctuation
@@ -136,8 +139,9 @@ def signup():
             message['Subject'] = "Verification for your Ande Canteen account"
             message['From'] = EMAIL_ADDRESS
             message['To'] = new_email
-            temp = ("You have been registered!\nNot you? Ignore this email and the account will not be created\nEnter AndeCanteen.com/verify/")
+            temp = ("You have been registered!\nNot you? Ignore this email and the account will not be created\nEnter\nAndeCanteen.com/verify/")
             temp += new_route
+            temp += "\nThis link will be removed after 5 minutes"
             message.set_content(temp)
             
             with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
@@ -145,7 +149,7 @@ def signup():
 
                 smtp.send_message(message)
 
-            return render_template('SignUp.html', username_taken=False, password_correct=True, pass_len=True)
+            return 'An email has been sent to the email, verify your account there. The verification link will be removed after 5 minutes'
         except:
             return 'There was an issue logging in :(\nContact us if there are any problems!'
 
@@ -180,8 +184,15 @@ def cart():
 def confirm(token):
     res = Confirmation_Route.query.filter_by(route=token)
     result = res.first()
-    if not result or db.session.query(exists().where(Account.username==result.username)).scalar():
+    if not(result) or db.session.query(exists().where(Account.username==result.username)).scalar():
         abort(404)
+
+    diff = datetime.datetime.utcnow()-result.time_created
+    diff_minutes = (diff.days * 24 * 60) + (diff.seconds/60.0)
+    if diff_minutes>=5:
+        res.delete()
+        db.session.commit()
+        return 'There was an error logging in :(\nContact us if there are any problems'
     else:
         try:
             new_account = Account(username=result.username, user_email=result.email, pass_hash=result.pass_hash, salt=result.salt)

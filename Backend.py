@@ -38,26 +38,25 @@ class Account(db.Model, UserMixin):
     pass_hash = db.Column(db.String(300), nullable=False)
     salt = db.Column(db.String(50), nullable=False)
     is_stallowner = db.Column(db.Boolean, nullable=False)
+    stall_id = db.Column(db.Integer, unique=True)
     # Skip these for now
-    # stall_id = db.Column(db.Integer, unique=True, primary_key=True)
     # is_admin = db.Column(db.Boolean)
-    # orders = db.relationship('Order', backref='person', lazy=True)
 
     def __repr__(self):
         return '<User %r>' % self.username
 
-# Skip this for now
-# class Order(db.Model):
-#     username = db.Column(db.String(100), unique=True, nullable=False)
-#     stall_id = db.Column(db.Integer, unique=True, primary_key=True)
-#     food_id = db.Column(db.Integer, unique=True, primary_key=True)
-#     order_id = db.Column(db.Integer, unique=True, primary_key=True)
+class Order(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(100), unique=True, nullable=False) # Username of guy who ordered
+    stall_id = db.Column(db.Integer, unique=True)
+    food_id = db.Column(db.Integer, unique=True)
+    order_id = db.Column(db.Integer, unique=True)
 
-#     def __repr__(self):
-#         return '<Order %r>' % self.order_id
+    def __repr__(self):
+        return '<Order %r>' % self.order_id
 
 class Confirmation_Route(db.Model):
-    id = db.Column(db.Integer, unique=True, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(200), unique=True, nullable=False)
     route = db.Column(db.String(100), unique=True, nullable=False)
     time_created = db.Column(db.DateTime, default=datetime.datetime.utcnow()) 
@@ -65,6 +64,21 @@ class Confirmation_Route(db.Model):
     pass_hash = db.Column(db.String(300), nullable=False)
     salt = db.Column(db.String(50), nullable=False)
     is_stallowner = db.Column(db.Boolean, nullable=False)
+
+    def __repr__(self):
+	    return '<Route %r>' % self.route
+
+class Stall(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    stall_id = db.Column(db.Integer, unique=True)
+
+    def __repr__(self):
+	    return '<Route %r>' % self.route
+
+class Food(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    food_id = db.Column(db.Integer, unique=True)
+    stall_id = db.Column(db.Integer, unique=True)
 
     def __repr__(self):
 	    return '<Route %r>' % self.route

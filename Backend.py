@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import exists
 from secrets import choice
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import UserMixin, login_user, LoginManager, logout_user, login_required
+from flask_login import UserMixin, login_user, LoginManager, logout_user, login_required, current_user
 import string
 import datetime
 import smtplib
@@ -37,10 +37,10 @@ class Account(db.Model, UserMixin):
     user_email = db.Column(db.String(200), unique=True, nullable=False)
     pass_hash = db.Column(db.String(300), nullable=False)
     salt = db.Column(db.String(50), nullable=False)
+    is_stallowner = db.Column(db.Boolean, nullable=False)
     # Skip these for now
     # stall_id = db.Column(db.Integer, unique=True, primary_key=True)
     # is_admin = db.Column(db.Boolean)
-    # is_stall = db.Column(db.Boolean)
     # orders = db.relationship('Order', backref='person', lazy=True)
 
     def __repr__(self):
@@ -64,6 +64,7 @@ class Confirmation_Route(db.Model):
     email = db.Column(db.String(200), unique=True, nullable=False)
     pass_hash = db.Column(db.String(300), nullable=False)
     salt = db.Column(db.String(50), nullable=False)
+    is_stallowner = db.Column(db.Boolean, nullable=False)
 
     def __repr__(self):
 	    return '<Route %r>' % self.route
@@ -128,7 +129,9 @@ def signup():
             
         new_salt = ''.join(choice(alphabets) for _ in range(50))
         new_password += new_salt
-        new_confirmation_route = Confirmation_Route(route=new_route, email=new_email, username=new_username, salt=new_salt, pass_hash=generate_password_hash(new_password, method = 'sha512'))
+        new_confirmation_route = Confirmation_Route(is_stallowner=True, route=new_route, email=new_email, username=new_username, salt=new_salt, pass_hash=generate_password_hash(new_password, method = 'sha512'))
+
+        # Everyone auto stall owner for now
 
         try:
             db.session.add(new_confirmation_route)
@@ -174,11 +177,20 @@ def HomePage():
 def DrinkStall():
     return render_template('DrinkStall.html')
 
-# Cart
-@app.route('/cart')
+# Checkout
+@app.route('/checkout')
 @login_required
 def cart():
-    return render_template('cart.html')
+    return render_template('checkout.html')
+
+# Stall owner
+@app.route('/StallOwner')
+@login_required
+def StallOwner():
+    account = load_user(current_user.get_id())
+    if account.is_stallowner:
+        return render_template('StallOwner.html')
+    abort(404)
     
 @app.route('/verify/<token>')
 def confirm(token):
@@ -195,7 +207,7 @@ def confirm(token):
         return 'There was an error logging in :(\nContact us if there are any problems'
     else:
         try:
-            new_account = Account(username=result.username, user_email=result.email, pass_hash=result.pass_hash, salt=result.salt)
+            new_account = Account(is_stallowner=result.is_stallowner, username=result.username, user_email=result.email, pass_hash=result.pass_hash, salt=result.salt)
             db.session.add(new_account)
             res.delete()
             db.session.commit()

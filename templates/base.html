@@ -2,17 +2,40 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<style>
-		.mainTitle{font-family: Arial, Helvetica, sans-serif;}
-		.basicText{font-family: Arial, Helvetica, sans-serif;}
-	</style>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-	<title>AndersonOrders - Ordering Made Easier</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>{% block title %}AndersonOrders - Ordering Made Easier{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
 	{% block head %} {% endblock %}
 </head>
 
-<body class="margin-0">
-	{% block body %} {% endblock %}
+<body>
+<header>
+
+    <div class="logo"><i class="fas fa-utensils" style="padding-right: 0.5rem;"></i>Ande Canteen</div>
+
+    <nav class="navbar">
+        <a class="active" href="HomePage">Stalls</a>
+        <a href="#profile">Profile</a>
+        <a href="#orders">Orders</a>
+    </nav>
+
+    <div class="icons">
+        <i class="fas fa-bars" id="menu-bars"></i>
+        <i class="fas fa-search" id="search-icon"></i>
+        <a href="#" class="fas fa-heart"></a>
+        <a href="checkout" class="fas fa-shopping-cart"></a>
+    </div>
+
+</header>
+
+<form action="" id="search-form">
+    <input type="search" placeholder="search here..." name="" id="search-box">
+    <label for="search-box" class="fas fa-search"></label>
+    <i class="fas fa-times" id="close"></i>
+</form>
+
+{% block body %} {% endblock %}
 </body>
 </html>

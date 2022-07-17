@@ -1,6 +1,6 @@
 from flask import Flask, redirect, url_for, request, render_template, flash, abort
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import exists
+from sqlalchemy import exists, or_
 from secrets import choice
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, login_user, LoginManager, logout_user, login_required, current_user
@@ -23,6 +23,9 @@ db = SQLAlchemy(app)
 
 alphabets = string.ascii_letters + string.digits + string.punctuation
 
+order_number = 1
+logged_in = False
+
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
@@ -39,8 +42,7 @@ class Account(db.Model, UserMixin):
     salt = db.Column(db.String(50), nullable=False)
     is_stallowner = db.Column(db.Boolean, nullable=False)
     stall_id = db.Column(db.Integer, unique=True)
-    # Skip these for now
-    # is_admin = db.Column(db.Boolean)
+    is_admin = db.Column(db.Boolean, nullable=False)
 
     def __repr__(self):
         return '<User %r>' % self.username
@@ -48,8 +50,8 @@ class Account(db.Model, UserMixin):
 class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), unique=True, nullable=False) # Username of guy who ordered
-    stall_id = db.Column(db.Integer, unique=True)
-    food_id = db.Column(db.Integer, unique=True)
+    stall_id = db.Column(db.Integer, )
+    food_id = db.Column(db.Integer,)
     order_id = db.Column(db.Integer, unique=True)
 
     def __repr__(self):
@@ -64,24 +66,24 @@ class Confirmation_Route(db.Model):
     pass_hash = db.Column(db.String(300), nullable=False)
     salt = db.Column(db.String(50), nullable=False)
     is_stallowner = db.Column(db.Boolean, nullable=False)
+    is_admin = db.Column(db.Boolean, nullable=False)
 
     def __repr__(self):
 	    return '<Route %r>' % self.route
 
 class Stall(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    stall_id = db.Column(db.Integer, unique=True)
 
     def __repr__(self):
-	    return '<Route %r>' % self.route
+	    return '<Route %r>' % self.id
 
 class Food(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    food_id = db.Column(db.Integer, unique=True)
-    stall_id = db.Column(db.Integer, unique=True)
+    stall_id = db.Column(db.Integer, db.ForeignKey(Stall.id), nullable=False)
+    collecting_time = db.Column(db.DateTime, nullable=False)
 
     def __repr__(self):
-	    return '<Route %r>' % self.route
+	    return '<Route %r>' % self.id
 
 # Login page
 @app.route('/', methods=['POST', 'GET'])
@@ -119,33 +121,43 @@ def signup():
         new_email = request.form.get('email')
 
         # disgusting code to check if username alr exists
-        account_exists = db.session.query(exists().where(Account.username==new_username)).scalar()
+        account_exists = db.session.query(exists().where(or_(Account.user_email==new_email,Account.username==new_username))).scalar()
 
-        if account_exists: # Username taken
-            return render_template('SignUp.html', username_taken=True, password_correct=(new_password==re_password), pass_len=(len(new_password)>7), whitespace = (' ' in new_password))
+        valid_email = True
+
+        if len(new_email)<16 or new_email[len(new_email)-16:]!="@students.edu.sg":
+            valid_email = False
+
+        if account_exists: # Username or email taken
+            return render_template('SignUp.html', username_taken=True, password_correct=(new_password==re_password), pass_len=(len(new_password)>7), whitespace = (' ' in new_password), valid_email=valid_email)
 
         if new_password!=re_password: # Password entered wrongly
-            return render_template('SignUp.html', username_taken=False, password_correct=False, pass_len=(len(new_password)>7), whitespace = (' ' in new_password))
+            return render_template('SignUp.html', username_taken=False, password_correct=False, pass_len=(len(new_password)>7), whitespace = (' ' in new_password), valid_email=valid_email)
 
         if len(new_password) < 8:
-            return render_template('SignUp.html', username_taken=False, password_correct=True, pass_len=False, whitespace = (' ' in new_password))
+            return render_template('SignUp.html', username_taken=False, password_correct=True, pass_len=False, whitespace = (' ' in new_password), valid_email=valid_email)
         
         if ' ' in new_password:
-            return render_template('SignUp.html', username_taken=False, password_correct=True, pass_len=True, whitespace=False)
+            return render_template('SignUp.html', username_taken=False, password_correct=True, pass_len=True, whitespace=True, valid_email=valid_email)
+
+        if not valid_email:
+            return render_template('SignUp.html', username_taken=False, password_correct=True, pass_len=True, whitespace=False, valid_email=False)
 
         # Successful sign up
         
         # Send email
         
+        # Generate unique confirmation route
         new_route = ''.join(choice(string.ascii_letters) for _ in range(30))
         while db.session.query(exists().where(Confirmation_Route.route==new_route)).scalar():
             new_route = ''.join(choice(string.ascii_letters) for _ in range(30))
             
+        # Generate salt
         new_salt = ''.join(choice(alphabets) for _ in range(50))
         new_password += new_salt
-        new_confirmation_route = Confirmation_Route(is_stallowner=True, route=new_route, email=new_email, username=new_username, salt=new_salt, pass_hash=generate_password_hash(new_password, method = 'sha512'))
+        new_confirmation_route = Confirmation_Route(is_admin=(new_username=="AMOS") ,is_stallowner=(new_username=="AMOS"), route=new_route, email=new_email, username=new_username, salt=new_salt, pass_hash=generate_password_hash(new_password, method = 'sha512'))
 
-        # Everyone auto stall owner for now
+        # Stall owner and admin only if username is AMOS
 
         try:
             db.session.add(new_confirmation_route)
@@ -171,7 +183,7 @@ def signup():
             return 'There was an issue logging in :(\nContact us if there are any problems!'
 
     else: # Get
-        return render_template('SignUp.html', username_taken=False, password_correct=True, pass_len=True)
+        return render_template('SignUp.html', username_taken=False, password_correct=True, pass_len=True, whitespace=False, valid_email=True)
 
 @app.route('/logout', methods=['POST', 'GET'])
 @login_required
@@ -183,28 +195,39 @@ def logout():
 @app.route('/HomePage', methods=['POST', 'GET'])
 @login_required
 def HomePage():
-    return render_template('HomePage.html')
+    global logged_in
+    if logged_in:
+        return render_template('HomePage.html', animate_gif=False)
+    else:
+        logged_in=True
+        return render_template('HomePage.html', animate_gif=True)
 
 # Drink stall
-@app.route('/DrinkStall')
+@app.route('/DrinkStall', methods=['POST', 'GET'])
 @login_required
 def DrinkStall():
     return render_template('DrinkStall.html')
 
 # Checkout
-@app.route('/checkout')
+@app.route('/checkout', methods=['POST', 'GET'])
 @login_required
 def cart():
     return render_template('checkout.html')
 
 # Stall owner
-@app.route('/StallOwner')
+@app.route('/StallOwner', methods=['POST', 'GET'])
 @login_required
 def StallOwner():
     account = load_user(current_user.get_id())
     if account.is_stallowner:
         return render_template('StallOwner.html')
     abort(404)
+
+# Profile to edit username or password
+@app.route('/Profile', methods=['POST', 'GET'])
+@login_required
+def Profile():
+    return render_template('profile.html')
     
 @app.route('/verify/<token>')
 def confirm(token):
@@ -221,7 +244,7 @@ def confirm(token):
         return 'There was an error logging in :(\nContact us if there are any problems'
     else:
         try:
-            new_account = Account(is_stallowner=result.is_stallowner, username=result.username, user_email=result.email, pass_hash=result.pass_hash, salt=result.salt)
+            new_account = Account(is_admin=result.is_stallowner ,is_stallowner=result.is_stallowner, username=result.username, user_email=result.email, pass_hash=result.pass_hash, salt=result.salt)
             db.session.add(new_account)
             res.delete()
             db.session.commit()

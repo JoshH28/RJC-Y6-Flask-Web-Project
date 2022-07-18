@@ -161,10 +161,10 @@ def signup():
 
         try:
             check_route = Confirmation_Route.query.filter_by(username=new_username)
-            
+
             if check_route.first():
                 check_route.delete()
-            
+
             db.session.add(new_confirmation_route)
             db.session.commit()
 
@@ -240,6 +240,14 @@ def StallOwner():
 def Profile():
     return render_template('profile.html')
 
+@app.route('/ForgetPass', methods=['POST', 'GET'])
+def ForgetPass():
+    if request.method == "POST":
+        email = request.form.get("email")
+
+    else:
+        return render_template('ForgetPass.html')
+
 @app.route('/verify/<token>')
 def confirm(token):
     res = Confirmation_Route.query.filter_by(route=token)
@@ -271,5 +279,5 @@ def confirm(token):
             db.session.commit()
             return 'There was an error logging in :(\nContact us if there are any problems'
 
-#if __name__ == "__main__":
-    # app.run(debug=True)
+if __name__ == "__main__":
+	app.run(debug=True)

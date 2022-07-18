@@ -24,7 +24,6 @@ db = SQLAlchemy(app)
 alphabets = string.ascii_letters + string.digits + string.punctuation
 
 order_number = 1
-logged_in = False
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -42,6 +41,7 @@ class Account(db.Model, UserMixin):
     salt = db.Column(db.String(50), nullable=False)
     is_stallowner = db.Column(db.Boolean, nullable=False)
     stall_id = db.Column(db.Integer, unique=True)
+	logged_in = db.Column(db.Boolean, default=False)
     is_admin = db.Column(db.Boolean, nullable=False)
 
     def __repr__(self):
@@ -194,11 +194,11 @@ def logout():
 @app.route('/HomePage', methods=['POST', 'GET'])
 @login_required
 def HomePage():
-    global logged_in
-    if logged_in:
+	curr_user = load_user(current_user.get_id())
+    if curr_user.logged_in:
         return render_template('HomePage.html', animate_gif=False)
     else:
-        logged_in=True
+        curr_user.logged_in=True
         return render_template('HomePage.html', animate_gif=True)
 
 # Drink stall
@@ -243,7 +243,7 @@ def confirm(token):
         return 'This verification link has expired. Please make a new one.'
     else:
         try:
-            new_account = Account(is_admin=result.is_stallowner ,is_stallowner=result.is_stallowner, username=result.username, user_email=result.email, pass_hash=result.pass_hash, salt=result.salt)
+            new_account = Account(logged_in=False, is_admin=result.is_stallowner ,is_stallowner=result.is_stallowner, username=result.username, user_email=result.email, pass_hash=result.pass_hash, salt=result.salt)
             db.session.add(new_account)
             res.delete()
             db.session.commit()

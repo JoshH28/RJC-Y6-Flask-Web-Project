@@ -41,7 +41,7 @@ class Account(db.Model, UserMixin):
     salt = db.Column(db.String(50), nullable=False)
     is_stallowner = db.Column(db.Boolean, nullable=False)
     stall_id = db.Column(db.Integer, unique=True)
-	logged_in = db.Column(db.Boolean, default=False)
+    logged_in = db.Column(db.Boolean, default=False)
     is_admin = db.Column(db.Boolean, nullable=False)
 
     def __repr__(self):
@@ -61,7 +61,7 @@ class Confirmation_Route(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(200), unique=True, nullable=False)
     route = db.Column(db.String(100), unique=True, nullable=False)
-    time_created = db.Column(db.DateTime, default=datetime.datetime.utcnow()) 
+    time_created = db.Column(db.DateTime, default=datetime.datetime.utcnow())
     email = db.Column(db.String(200), unique=True, nullable=False)
     pass_hash = db.Column(db.String(300), nullable=False)
     salt = db.Column(db.String(50), nullable=False)
@@ -136,7 +136,7 @@ def signup():
 
         if len(new_password) < 8:
             return render_template('SignUp.html', username_taken=False, password_correct=True, pass_len=False, whitespace = (' ' in new_password), valid_email=valid_email)
-        
+
         if ' ' in new_password:
             return render_template('SignUp.html', username_taken=False, password_correct=True, pass_len=True, whitespace=True, valid_email=valid_email)
 
@@ -144,14 +144,14 @@ def signup():
             return render_template('SignUp.html', username_taken=False, password_correct=True, pass_len=True, whitespace=False, valid_email=False)
 
         # Successful sign up
-        
+
         # Send email
-        
+
         # Generate unique confirmation route
         new_route = ''.join(choice(string.ascii_letters) for _ in range(30))
         while db.session.query(exists().where(Confirmation_Route.route==new_route)).scalar():
             new_route = ''.join(choice(string.ascii_letters) for _ in range(30))
-            
+
         # Generate salt
         new_salt = ''.join(choice(alphabets) for _ in range(50))
         new_password += new_salt
@@ -171,7 +171,7 @@ def signup():
             temp += new_route
             temp += "\nThis link will be removed after 5 minutes"
             message.set_content(temp)
-            
+
             with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
                 smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
 
@@ -187,6 +187,10 @@ def signup():
 @app.route('/logout', methods=['POST', 'GET'])
 @login_required
 def logout():
+    curr_user = load_user(current_user.get_id())
+    if curr_user.logged_in:
+        curr_user.logged_in=False
+        db.session.commit()
     logout_user()
     return redirect(url_for('login'))
 
@@ -194,11 +198,12 @@ def logout():
 @app.route('/HomePage', methods=['POST', 'GET'])
 @login_required
 def HomePage():
-	curr_user = load_user(current_user.get_id())
+    curr_user = load_user(current_user.get_id())
     if curr_user.logged_in:
         return render_template('HomePage.html', animate_gif=False)
     else:
         curr_user.logged_in=True
+        db.session.commit()
         return render_template('HomePage.html', animate_gif=True)
 
 # Drink stall
@@ -227,7 +232,7 @@ def StallOwner():
 @login_required
 def Profile():
     return render_template('profile.html')
-    
+
 @app.route('/verify/<token>')
 def confirm(token):
     res = Confirmation_Route.query.filter_by(route=token)
@@ -254,5 +259,5 @@ def confirm(token):
             db.session.commit()
             return 'There was an error logging in :(\nContact us if there are any problems'
 
-if __name__ == "__main__":
-    app.run(debug=True)
+#if __name__ == "__main__":
+    # app.run(debug=True)

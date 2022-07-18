@@ -56,13 +56,10 @@
             	</div>
                 {% if username_taken or not password_correct or not pass_len %}
     				{% if username_taken %}
-    					<div class="incorrect">Username is already taken</div>
+    					<div class="incorrect">Username or email has already been registered</div>
     				{% endif %}
     				{% if invalid_email %}
     					<div class="incorrect">Invalid email</div>
-    				{% endif %}
-    				{% if email_taken %}
-    					<div class="incorrect">Email is already taken</div>
     				{% endif %}
     				{% if not password_correct %}
     					<div class="incorrect">Passwords do not match!</div>

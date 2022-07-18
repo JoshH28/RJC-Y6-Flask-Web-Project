@@ -33,6 +33,18 @@ login_manager.login_view = "login"
 def load_user(user_id):
     return Account.query.get(int(user_id))
 
+def send_email(email, subject, message):
+    msg = EmailMessage()
+    msg['Subject'] = subject
+    msg['From'] = EMAIL_ADDRESS
+    msg['To'] = email
+    msg.set_content(message)
+
+    with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+        smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
+
+        smtp.send_message(msg)
+
 class Account(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(200), unique=True, nullable=False)
@@ -67,6 +79,15 @@ class Confirmation_Route(db.Model):
     salt = db.Column(db.String(50), nullable=False)
     is_stallowner = db.Column(db.Boolean, nullable=False)
     is_admin = db.Column(db.Boolean, nullable=False)
+
+    def __repr__(self):
+	    return '<Route %r>' % self.route
+
+class Reset_Route(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    route = db.Column(db.String(100), unique=True, nullable=False)
+    time_created = db.Column(db.DateTime, default=datetime.datetime.utcnow())
+    email = db.Column(db.String(200), nullable=False)
 
     def __repr__(self):
 	    return '<Route %r>' % self.route
@@ -168,21 +189,14 @@ def signup():
             db.session.add(new_confirmation_route)
             db.session.commit()
 
-            message = EmailMessage()
-            message['Subject'] = "Verification for your Ande Canteen account"
-            message['From'] = EMAIL_ADDRESS
-            message['To'] = new_email
+            subj = "Verification for your Ande Canteen account"
             temp = "Hi "
             temp += new_username
             temp += "!\n\nYou have been registered!\nClick on the attached link to verify your AndeCanteen account\nNot you? Ignore this email and the account will not be created\nThis link will be removed after 5 minutes\n\nhttps://andecanteen.com/verify/"
             temp += new_route
             temp += "\n\nRegards,\nAndeCanteen"
-            message.set_content(temp)
 
-            with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
-                smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
-
-                smtp.send_message(message)
+            send_email(new_email, subj, temp)
 
             return 'An email has been sent to the email, verify your account there. The verification link will be removed after 5 minutes'
         except:
@@ -244,9 +258,67 @@ def Profile():
 def ForgetPass():
     if request.method == "POST":
         email = request.form.get("email")
+        account_query = Account.query.filter_by(user_email=email).first()
+        if not account_query:
+            return render_template('ForgetPass.html', incorrect=True)
+        try:
+            new_route = ''.join(choice(string.ascii_letters) for _ in range(30))
+            while db.session.query(exists().where(Reset_Route.route==new_route)).scalar():
+                new_route = ''.join(choice(string.ascii_letters) for _ in range(30))
 
+            new_reset = Reset_Route(email=email,route=new_route)
+
+            check_route = Reset_Route.query.filter_by(email=email)
+
+            if check_route.first():
+                check_route.delete()
+
+            db.session.add(new_reset)
+            db.session.commit()
+
+            subj = "Password reset link for your AndeCanteen account"
+
+            temp = "Hi "
+            temp += account_query.username
+            temp += "!\n\nThe attached link is the link for your AndeCanteen account password reset\nNot you? Ignore this email and the password will not be resetted\nThis link will be removed after 5 minutes\n\nhttps://andecanteen.com/passreset/"
+            temp += new_route
+            temp += "\n\nRegards,\nAndeCanteen"
+
+            send_email(email, subj, temp)
+
+            return "An email has been sent to your email containing the password reset link"
+        except:
+            return "There was an error resetting your password :(\nPlease contact us if there are any issues"
     else:
-        return render_template('ForgetPass.html')
+        return render_template('ForgetPass.html', incorrect=False)
+
+@app.route('/passreset/<token>')
+def passreset():
+    res = Reset_Route.query.filter_by(route=token)
+    result = res.first()
+    if not(result):
+        abort(404)
+
+    diff = datetime.datetime.utcnow()-result.time_created
+    diff_minutes = (diff.days * 24 * 60) + (diff.seconds/60.0)
+    if diff_minutes>=5.0:
+        res.delete()
+        db.session.commit()
+        return 'This password reset link has expired. Please make a new one.'
+    else:
+        return render_template("ChangePass.html")
+        try:
+            account = Account.query.filter_by(user_email=result.email).first()
+            account.
+            res.delete()
+            db.session.commit()
+            login_user(account)
+            return redirect(url_for('HomePage'))
+        except:
+            res.delete()
+            db.session.commit()
+            return 'There was an error logging in :(\nContact us if there are any problems'
+
 
 @app.route('/verify/<token>')
 def confirm(token):
@@ -255,7 +327,7 @@ def confirm(token):
     if not(result):
         abort(404)
 
-    if db.session.query(exists().where(Account.username==result.username)).scalar():
+    if db.session.query(exists().where(Account.username==result.username)).scalar(): # Check if an account already exists
         res.delete()
         db.session.commit()
         abort(404)
@@ -279,5 +351,5 @@ def confirm(token):
             db.session.commit()
             return 'There was an error logging in :(\nContact us if there are any problems'
 
-if __name__ == "__main__":
-	app.run(debug=True)
+#if __name__ == "__main__":
+    # app.run(debug=True)

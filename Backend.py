@@ -59,10 +59,10 @@ class Order(db.Model):
 
 class Confirmation_Route(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(200), unique=True, nullable=False)
+    username = db.Column(db.String(200), nullable=False)
     route = db.Column(db.String(100), unique=True, nullable=False)
     time_created = db.Column(db.DateTime, default=datetime.datetime.utcnow())
-    email = db.Column(db.String(200), unique=True, nullable=False)
+    email = db.Column(db.String(200), nullable=False)
     pass_hash = db.Column(db.String(300), nullable=False)
     salt = db.Column(db.String(50), nullable=False)
     is_stallowner = db.Column(db.Boolean, nullable=False)
@@ -160,6 +160,11 @@ def signup():
         # Stall owner and admin only if username is AMOS
 
         try:
+            check_route = Confirmation_Route.query.filter_by(username=new_username)
+            
+            if check_route.first():
+                check_route.delete()
+            
             db.session.add(new_confirmation_route)
             db.session.commit()
 
@@ -167,9 +172,11 @@ def signup():
             message['Subject'] = "Verification for your Ande Canteen account"
             message['From'] = EMAIL_ADDRESS
             message['To'] = new_email
-            temp = ("You have been registered!\nNot you? Ignore this email and the account will not be created\nEnter\nAndeCanteen.com/verify/")
+            temp = "Hi "
+            temp += new_username
+            temp += "!\n\nYou have been registered!\nClick on the attached link to verify your AndeCanteen account\nNot you? Ignore this email and the account will not be created\nThis link will be removed after 5 minutes\n\nhttps://andecanteen.com/verify/"
             temp += new_route
-            temp += "\nThis link will be removed after 5 minutes"
+            temp += "\n\nRegards,\nAndeCanteen"
             message.set_content(temp)
 
             with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
@@ -237,7 +244,12 @@ def Profile():
 def confirm(token):
     res = Confirmation_Route.query.filter_by(route=token)
     result = res.first()
-    if not(result) or db.session.query(exists().where(Account.username==result.username)).scalar():
+    if not(result):
+        abort(404)
+
+    if db.session.query(exists().where(Account.username==result.username)).scalar():
+        res.delete()
+        db.session.commit()
         abort(404)
 
     diff = datetime.datetime.utcnow()-result.time_created

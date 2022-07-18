@@ -238,10 +238,10 @@ def confirm(token):
 
     diff = datetime.datetime.utcnow()-result.time_created
     diff_minutes = (diff.days * 24 * 60) + (diff.seconds/60.0)
-    if diff_minutes>=5:
+    if diff_minutes>=5.0:
         res.delete()
         db.session.commit()
-        return 'There was an error logging in :(\nContact us if there are any problems'
+        return 'This verification link has expired. Please make a new one.'
     else:
         try:
             new_account = Account(is_admin=result.is_stallowner ,is_stallowner=result.is_stallowner, username=result.username, user_email=result.email, pass_hash=result.pass_hash, salt=result.salt)

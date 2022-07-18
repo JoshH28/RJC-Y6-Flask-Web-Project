@@ -1,4 +1,4 @@
-from flask import Flask, redirect, url_for, request, render_template, flash, abort
+from flask import Flask, redirect, url_for, request, render_template, abort
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import exists, or_
 from secrets import choice
@@ -162,7 +162,6 @@ def signup():
         try:
             db.session.add(new_confirmation_route)
             db.session.commit()
-            flash("Success!")
 
             message = EmailMessage()
             message['Subject'] = "Verification for your Ande Canteen account"
@@ -248,7 +247,6 @@ def confirm(token):
             db.session.add(new_account)
             res.delete()
             db.session.commit()
-            flash('Success!')
             login_user(new_account)
             return redirect(url_for('HomePage'))
         except:

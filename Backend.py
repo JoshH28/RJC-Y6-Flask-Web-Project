@@ -38,6 +38,7 @@ def send_email(email, subject, message):
     msg['Subject'] = subject
     msg['From'] = EMAIL_ADDRESS
     msg['To'] = email
+	msg['X-Priority'] = '2'
     msg.set_content(message)
 
     with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:

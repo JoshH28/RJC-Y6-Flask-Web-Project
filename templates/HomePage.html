@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block body %}
-    
+
 <!-- dishes section starts  -->
 
 <section class="dishes" id="dishes">
@@ -33,6 +33,9 @@
                 <i class="fas fa-star-half-alt"></i>
             </div> -->
             <a href="#" class="btn">Order</a>
+            {% if is_admin %}
+            <a href="#" class="btn">edit</a>
+            {% endif %}
         </div>
 
         <div class="box">
@@ -49,6 +52,9 @@
             </div> -->
             <!-- <span>$15.99</span> -->
             <a href="#" class="btn">Order</a>
+            {% if is_admin %}
+            <a href="#" class="btn">edit</a>
+            {% endif %}
         </div>
 
         <div class="box">
@@ -64,6 +70,9 @@
                 <i class="fas fa-star-half-alt"></i>
             </div> -->
             <a href="#" class="btn">Order</a>
+            {% if is_admin %}
+            <a href="#" class="btn">edit</a>
+            {% endif %}
         </div>
 
         <div class="box">
@@ -79,6 +88,9 @@
                 <i class="fas fa-star-half-alt"></i>
             </div> -->
             <a href="#" class="btn">Order</a>
+            {% if is_admin %}
+            <a href="#" class="btn">edit</a>
+            {% endif %}
         </div>
 
         <div class="box">
@@ -94,6 +106,9 @@
                 <i class="fas fa-star-half-alt"></i>
             </div> -->
             <a href="#" class="btn">Order</a>
+            {% if is_admin %}
+            <a href="#" class="btn">edit</a>
+            {% endif %}
         </div>
 
         <div class="box">
@@ -109,6 +124,9 @@
                 <i class="fas fa-star-half-alt"></i>
             </div> -->
             <a href="DrinkStall" class="btn">Order</a>
+            {% if is_admin %}
+            <a href="#" class="btn">edit</a>cde fg
+            {% endif %}
         </div>
 
     </div>
@@ -129,5 +147,4 @@
 <!-- custom js file link  -->
 <script src="../static/scripts/gif_animation.js"></script>
 {% endif %}
-
 {% endblock %}

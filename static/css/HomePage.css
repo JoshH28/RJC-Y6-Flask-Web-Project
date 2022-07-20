@@ -57,6 +57,7 @@ section:nth-child(even){
     border-radius: .5rem;
     cursor: pointer;
     padding:.8rem 3rem;
+    margin: 0.8rem 0.4rem 0 0.4rem;
 }
 
 .btn:hover{
@@ -591,6 +592,39 @@ header .icons #menu-bars{
     top:-110%;
     opacity:0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* media queries  */
 

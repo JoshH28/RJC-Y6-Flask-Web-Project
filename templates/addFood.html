@@ -1,53 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Complete Responsive Food Website Design Tutorial</title>
+{% extends 'base.html' %}
 
-    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
-
-    <!-- font awesome cdn link  -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+{% block head %}
 
     <!-- custom css file link  -->
-    <link rel="stylesheet" href="addFood.css">
+    <link rel="stylesheet" href="../static/css/addFood.css">
 
-</head>
-<body>
-    
-<!-- header section starts      -->
+{% endblock %}
 
-<header>
-
-    <a href="#" class="logo"><i class="fas fa-utensils" style="padding-right: 0.5rem;"></i>Ande Canteen</a>
-
-    <nav class="navbar">
-        <a class="active" href="#home">stalls</a>
-        <a href="#dishes">profile</a>
-        <a href="#about">order</a>
-    </nav>
-
-    <div class="icons">
-        <i class="fas fa-bars" id="menu-bars"></i>
-        <i class="fas fa-search" id="search-icon"></i>
-        <a href="#" class="fas fa-heart"></a>
-        <a href="#" class="fas fa-shopping-cart"></a>
-    </div>
-
-</header>
-
-<!-- header section ends-->
-
-<!-- search form  -->
-
-<form action="" id="search-form">
-    <input type="search" placeholder="search here..." name="" id="search-box">
-    <label for="search-box" class="fas fa-search"></label>
-    <i class="fas fa-times" id="close"></i>
-</form>
-
+{% block body %}
 
 <!-- dishes section starts  -->
 
@@ -59,7 +19,7 @@
     <div class="container-main">
         <div class="container-left">
             <div class="picture">
-                <img src="picture.png" alt="">
+                <img src="../static/assets/picture.png" alt="">
             </div>
             <div class="button">
                 <p>add picture</p>
@@ -78,19 +38,5 @@
 
 </section>
 
-<!-- dishes section ends -->
 
-
-
-<!-- loader part 
-<div class="loader-container">
-    <img src="images/loader.gif" alt="">
-</div> -->
-
-<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-
-<!-- custom js file link  -->
-<script src="addFood.js"></script>
-
-</body>
-</html>
+{% endblock %}

@@ -38,7 +38,7 @@ def send_email(email, subject, message):
     msg['Subject'] = subject
     msg['From'] = EMAIL_ADDRESS
     msg['To'] = email
-	msg['X-Priority'] = '2'
+    msg['X-Priority'] = '2'
     msg.set_content(message)
 
     with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
@@ -293,7 +293,7 @@ def ForgetPass():
     else:
         return render_template('ForgetPass.html', incorrect=False)
 
-@app.route('/passreset/<token>')
+@app.route('/passreset/<token>', methods=['POST', 'GET'])
 def passreset():
     res = Reset_Route.query.filter_by(route=token)
     result = res.first()
@@ -306,11 +306,21 @@ def passreset():
         res.delete()
         db.session.commit()
         return 'This password reset link has expired. Please make a new one.'
-    else:
-        return render_template("ChangePass.html")
+
+    if request.method == "POST":
+        password = request.form.get("password")
+        re_pass = request.form.get("re_password")
+        whitespace = ' ' in password
+        password_correct = (password == re_pass)
+        pass_len = (len(password)>=8)
+        if whitespace or not(password_correct) or not(pass_len):
+            return render_template("ChangePass.html", whitespace=whitespace, password_correct=password_correct, pass_len=pass_len)
         try:
             account = Account.query.filter_by(user_email=result.email).first()
-            account.
+            new_salt = ''.join(choice(alphabets) for _ in range(50))
+            password += new_salt
+            account.salt = new_salt
+            account.pass_hash = generate_password_hash(password, method = 'sha512')
             res.delete()
             db.session.commit()
             login_user(account)
@@ -319,6 +329,8 @@ def passreset():
             res.delete()
             db.session.commit()
             return 'There was an error logging in :(\nContact us if there are any problems'
+    else:
+        return render_template("ChangePass.html", whitespace=False, password_correct=True, pass_len=True)
 
 
 @app.route('/verify/<token>')
@@ -352,5 +364,5 @@ def confirm(token):
             db.session.commit()
             return 'There was an error logging in :(\nContact us if there are any problems'
 
-#if __name__ == "__main__":
-    # app.run(debug=True)
+if __name__ == "__main__":
+	app.run(debug=True)

@@ -294,7 +294,7 @@ def ForgetPass():
         return render_template('ForgetPass.html', incorrect=False)
 
 @app.route('/passreset/<token>', methods=['POST', 'GET'])
-def passreset():
+def passreset(token):
     res = Reset_Route.query.filter_by(route=token)
     result = res.first()
     if not(result):
@@ -309,7 +309,7 @@ def passreset():
 
     if request.method == "POST":
         password = request.form.get("password")
-        re_pass = request.form.get("re_password")
+        re_pass = request.form.get("repassword")
         whitespace = ' ' in password
         password_correct = (password == re_pass)
         pass_len = (len(password)>=8)
@@ -364,5 +364,5 @@ def confirm(token):
             db.session.commit()
             return 'There was an error logging in :(\nContact us if there are any problems'
 
-if __name__ == "__main__":
-	app.run(debug=True)
+#if __name__ == "__main__":
+    # app.run(debug=True)

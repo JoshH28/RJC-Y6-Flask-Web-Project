@@ -8,6 +8,7 @@ import string
 import datetime
 import smtplib
 import os
+import random
 from email.message import EmailMessage
 from dotenv import load_dotenv
 
@@ -228,26 +229,11 @@ def HomePage():
         db.session.commit()
         return render_template('HomePage.html', animate_gif=True)
 
-# Drink stall
-@app.route('/DrinkStall', methods=['POST', 'GET'])
-@login_required
-def DrinkStall():
-    return render_template('DrinkStall.html')
-
 # Checkout
 @app.route('/checkout', methods=['POST', 'GET'])
 @login_required
 def cart():
     return render_template('checkout.html')
-
-# Stall owner
-@app.route('/StallOwner', methods=['POST', 'GET'])
-@login_required
-def StallOwner():
-    account = load_user(current_user.get_id())
-    if account.is_stallowner:
-        return render_template('StallOwner.html')
-    abort(404)
 
 # Profile to edit username or password
 @app.route('/Profile', methods=['POST', 'GET'])
@@ -363,6 +349,22 @@ def confirm(token):
             res.delete()
             db.session.commit()
             return 'There was an error logging in :(\nContact us if there are any problems'
+    
+# Drink stall
+# @app.route('/DrinkStall', methods=['POST', 'GET'])
+# @login_required
+# def DrinkStall():
+#     return render_template('DrinkStall.html')
 
-#if __name__ == "__main__":
-    # app.run(debug=True)
+# # Stall owner
+# @app.route('/StallOwner', methods=['POST', 'GET'])
+# @login_required
+# def StallOwner():
+#     account = load_user(current_user.get_id())
+#     if account.is_stallowner:
+#         return render_template('StallOwner.html')
+#     abort(404)
+
+
+# if __name__ == "__main__":
+#     app.run(host='0.0.0.0', port=random.randint(2000,9000), debug=True)

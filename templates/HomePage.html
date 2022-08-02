@@ -19,12 +19,12 @@
     <h1 class="heading"> Stalls </h1>
 
     <div class="box-container">
-
-        <div class="box">
+        {% for i in range(len(stalls)) %}
+            <div class="box">
             <a href="#" class="fas fa-heart"></a>
             <a href="#" class="fas fa-eye"></a>
-            <img src="../static/assets/images/sushi.png" alt="">
-            <h3>Japanese Stall</h3>
+            <img src="../static/assets/{{ img[i] }}" alt="{{ stalls[i] }}">
+            <h3>{{ stalls[i] }}</h3>
             <!-- <div class="stars">
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
@@ -32,6 +32,18 @@
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star-half-alt"></i>
             </div> -->
+            <a href="{{ stall_route[i] }}" class="btn">Order</a>
+            {% if is_admin %}
+            <a href="{{ stall_edit[i] }} class="btn">edit</a>
+            {% endif %}
+        </div>
+        
+        {% endfor %}
+<!--         <div class="box">
+            <a href="#" class="fas fa-heart"></a>
+            <a href="#" class="fas fa-eye"></a>
+            <img src="../static/assets/images/sushi.png" alt="">
+            <h3>Japanese Stall</h3>
             <a href="#" class="btn">Order</a>
             {% if is_admin %}
             <a href="#" class="btn">edit</a>
@@ -43,14 +55,6 @@
             <a href="#" class="fas fa-eye"></a>
             <img src="../static/assets/images/chickenRice.png" alt="">
             <h3>Chicken Rice Stall</h3>
-            <!-- <div class="stars">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star-half-alt"></i>
-            </div> -->
-            <!-- <span>$15.99</span> -->
             <a href="#" class="btn">Order</a>
             {% if is_admin %}
             <a href="#" class="btn">edit</a>
@@ -62,13 +66,6 @@
             <a href="#" class="fas fa-eye"></a>
             <img src="../static/assets/images/western.png" alt="">
             <h3>Western Stall</h3>
-            <!-- <div class="stars">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star-half-alt"></i>
-            </div> -->
             <a href="#" class="btn">Order</a>
             {% if is_admin %}
             <a href="#" class="btn">edit</a>
@@ -80,13 +77,6 @@
             <a href="#" class="fas fa-eye"></a>
             <img src="../static/assets/images/mixed.png" alt="">
             <h3>Mixed Rice Stall</h3>
-            <!-- <div class="stars">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star-half-alt"></i>
-            </div> -->
             <a href="#" class="btn">Order</a>
             {% if is_admin %}
             <a href="#" class="btn">edit</a>
@@ -98,13 +88,6 @@
             <a href="#" class="fas fa-eye"></a>
             <img src="../static/assets/images/fruit.png" alt="">
             <h3>Fruit Stall</h3>
-            <!-- <div class="stars">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star-half-alt"></i>
-            </div> -->
             <a href="#" class="btn">Order</a>
             {% if is_admin %}
             <a href="#" class="btn">edit</a>
@@ -116,19 +99,12 @@
             <a href="#" class="fas fa-eye"></a>
             <img src="../static/assets/images/drink.png" alt="">
             <h3>Drink Stall</h3>
-            <!-- <div class="stars">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star-half-alt"></i>
-            </div> -->
             <a href="DrinkStall" class="btn">Order</a>
             {% if is_admin %}
             <a href="DrinkStall" class="btn">edit</a>cde fg
             {% endif %}
         </div>
-
+ -->
     </div>
 
 </section>

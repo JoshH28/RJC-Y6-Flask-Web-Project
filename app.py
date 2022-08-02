@@ -49,9 +49,9 @@ def send_email(email, subject, message):
 
 class Account(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(200), unique=True, nullable=False)
-    user_email = db.Column(db.String(200), unique=True, nullable=False)
-    pass_hash = db.Column(db.String(300), nullable=False)
+    username = db.Column(db.String, unique=True, nullable=False)
+    user_email = db.Column(db.String, unique=True, nullable=False)
+    pass_hash = db.Column(db.String, nullable=False)
     salt = db.Column(db.String(50), nullable=False)
     is_stallowner = db.Column(db.Boolean, nullable=False)
     stall_id = db.Column(db.Integer, unique=True)
@@ -63,9 +63,9 @@ class Account(db.Model, UserMixin):
 
 class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(100), unique=True, nullable=False) # Username of guy who ordered
-    stall_id = db.Column(db.Integer, )
-    food_id = db.Column(db.Integer,)
+    username = db.Column(db.String, unique=True, nullable=False) # Username of guy who ordered
+    stall_id = db.Column(db.Integer)
+    food_id = db.Column(db.Integer)
     order_id = db.Column(db.Integer, unique=True)
 
     def __repr__(self):
@@ -73,11 +73,11 @@ class Order(db.Model):
 
 class Confirmation_Route(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(200), nullable=False)
+    username = db.Column(db.String, nullable=False)
     route = db.Column(db.String(100), unique=True, nullable=False)
     time_created = db.Column(db.DateTime, default=datetime.datetime.utcnow())
-    email = db.Column(db.String(200), nullable=False)
-    pass_hash = db.Column(db.String(300), nullable=False)
+    email = db.Column(db.String, nullable=False)
+    pass_hash = db.Column(db.String, nullable=False)
     salt = db.Column(db.String(50), nullable=False)
     is_stallowner = db.Column(db.Boolean, nullable=False)
     is_admin = db.Column(db.Boolean, nullable=False)
@@ -89,7 +89,7 @@ class Reset_Route(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     route = db.Column(db.String(100), unique=True, nullable=False)
     time_created = db.Column(db.DateTime, default=datetime.datetime.utcnow())
-    email = db.Column(db.String(200), nullable=False)
+    email = db.Column(db.String, nullable=False)
 
     def __repr__(self):
 	    return '<Route %r>' % self.route
@@ -367,4 +367,4 @@ def confirm(token):
 
 
 # if __name__ == "__main__":
-#     app.run(host='0.0.0.0', port=random.randint(2000,9000), debug=True)
+#     app.run(host='0.0.0.0', port=random.randint(2000,9000), debug=True)Ma

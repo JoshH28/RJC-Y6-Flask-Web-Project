@@ -5,5 +5,16 @@
 {% endblock %}
 
 {% block body %}
-Add stLL LOLOL yay
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div>{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <form method="POST" action="/" enctype="multipart/form-data">
+    <dl>
+    <p><input type="file" name="file" autocomplete="off" required></p>
+    </dl>
+    <p><input type="submit" value="Submit"></p>
 {% endblock %}

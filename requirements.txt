@@ -1,0 +1,5 @@
+flask
+flask-sqlalchemy
+python-dotenv
+flask-login
+flask-file-upload

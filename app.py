@@ -1,8 +1,9 @@
-from flask import Flask, redirect, url_for, request, render_template, abort
+from flask import Flask, redirect, url_for, request, render_template, abort, FileUpload, flash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import exists, or_
 from secrets import choice
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 from flask_login import UserMixin, login_user, LoginManager, logout_user, login_required, current_user
 import string
 import datetime
@@ -20,9 +21,11 @@ EMAIL_ADDRESS = os.getenv("EMAIL_ADDRESS")
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
-app.config['UPLOAD_FOLDER'] = "static/assets/stalls"
+app.config['ALLOWED_EXTENSIONS'] = ['png', 'svg', 'png', 'jpg', 'jpeg']
 app.config['MAX_CONTENT_PATH'] = 1000000000 # 1 gigabyte
 db = SQLAlchemy(app)
+
+file_upload = FileUpload(app, db)
 
 alphabets = string.ascii_letters + string.digits + string.punctuation
 
@@ -98,7 +101,8 @@ class Reset_Route(db.Model):
 
 class Stall(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-
+    logo = file_upload.Column()
+    
     def __repr__(self):
 	    return '<Route %r>' % self.id
 
@@ -243,7 +247,29 @@ def AddStall():
     curr_user = load_user(current_user.get_id())
     if not curr_user.is_admin:
         abort(404)
-    return render_template('AddStall.html')
+
+    if request.method == 'POST':
+        # check if the post request has the file part
+        if 'file' not in request.files:
+            flash('No file attached')
+            return render_template('AddStall.html')
+            
+        file = request.files['file']
+        if file.filename == '':
+            flash('No file selected for uploading')
+            return redirect(request.url)
+            
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(filename)
+            return redirect('/')
+            
+        else:
+            flash('Allowed file types are txt, pdf, png, jpg, jpeg, gif')
+            return render_template('AddStall.html')
+
+    else:
+        return render_template('AddStall.html')
 
 # Profile to edit username or password
 @app.route('/Profile', methods=['POST', 'GET'])

@@ -1,5 +1,6 @@
-from flask import Flask, redirect, url_for, request, render_template, abort, FileUpload, flash
+from flask import Flask, redirect, url_for, request, render_template, abort, flash
 from flask_sqlalchemy import SQLAlchemy
+from flask_file_upload.file_upload import FileUpload
 from sqlalchemy import exists, or_
 from secrets import choice
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -99,6 +100,7 @@ class Reset_Route(db.Model):
     def __repr__(self):
 	    return '<Route %r>' % self.route
 
+@file_upload.Model
 class Stall(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     logo = file_upload.Column()

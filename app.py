@@ -20,6 +20,8 @@ EMAIL_ADDRESS = os.getenv("EMAIL_ADDRESS")
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
+app.config['UPLOAD_FOLDER'] = "static/assets/stalls"
+app.config['MAX_CONTENT_PATH'] = 1000000000 # 1 gigabyte
 db = SQLAlchemy(app)
 
 alphabets = string.ascii_letters + string.digits + string.punctuation
@@ -109,7 +111,7 @@ class Food(db.Model):
 	    return '<Route %r>' % self.id
 
 # Login page
-@app.route('/', methods=['POST', 'GET'])
+@app.route('/login', methods=['POST', 'GET'])
 def login():
     if request.method == "POST": # Post
         new_username = request.form.get('username')
@@ -128,7 +130,7 @@ def login():
 
         if result:
             login_user(account_query)
-            return redirect(url_for('HomePage'))
+            return redirect('/')
         else:
             return render_template('login.html', incorrect=True)
 
@@ -218,22 +220,30 @@ def logout():
     return redirect(url_for('login'))
 
 # Home page
-@app.route('/HomePage', methods=['POST', 'GET'])
+@app.route('/', methods=['POST', 'GET'])
 @login_required
 def HomePage():
     curr_user = load_user(current_user.get_id())
     if curr_user.logged_in:
-        return render_template('HomePage.html', animate_gif=False)
+        return render_template('HomePage.html', animate_gif=False, is_admin=curr_user.is_admin)
     else:
         curr_user.logged_in=True
         db.session.commit()
-        return render_template('HomePage.html', animate_gif=True)
+        return render_template('HomePage.html', animate_gif=True, is_admin=curr_user.is_admin)
 
 # Checkout
 @app.route('/checkout', methods=['POST', 'GET'])
 @login_required
-def cart():
+def checkout():
     return render_template('checkout.html')
+
+@app.route('/AddStall', methods=['POST', 'GET'])
+@login_required
+def AddStall():
+    curr_user = load_user(current_user.get_id())
+    if not curr_user.is_admin:
+        abort(404)
+    return render_template('AddStall.html')
 
 # Profile to edit username or password
 @app.route('/Profile', methods=['POST', 'GET'])
@@ -310,7 +320,7 @@ def passreset(token):
             res.delete()
             db.session.commit()
             login_user(account)
-            return redirect(url_for('HomePage'))
+            return redirect('/')
         except:
             res.delete()
             db.session.commit()
@@ -344,7 +354,7 @@ def confirm(token):
             res.delete()
             db.session.commit()
             login_user(new_account)
-            return redirect(url_for('HomePage'))
+            return redirect('/')
         except:
             res.delete()
             db.session.commit()
@@ -367,4 +377,4 @@ def confirm(token):
 
 
 # if __name__ == "__main__":
-#     app.run(host='0.0.0.0', port=random.randint(2000,9000), debug=True)Ma
+#     app.run(host='0.0.0.0', port=random.randint(2000,9000), debug=True)

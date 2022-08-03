@@ -48,6 +48,26 @@ section:nth-child(even){
     text-transform: uppercase;
 }
 
+.addbtn{
+    left: 78%;
+    top: 12.5%;
+    position: absolute;
+    margin-top: 1rem;
+    display: inline-block;
+    font-size: 1.7rem;
+    color:#fff;
+    background: var(--black);
+    border-radius: .5rem;
+    cursor: pointer;
+    padding:.8rem 3rem;
+    margin: 0.8rem 0.4rem 0 0.4rem;
+}
+
+.addbtn:hover{
+    background: var(--green);
+    letter-spacing: .1rem;
+}
+
 .btn{
     margin-top: 1rem;
     display: inline-block;

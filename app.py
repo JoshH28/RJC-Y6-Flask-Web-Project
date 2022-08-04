@@ -104,9 +104,10 @@ class Reset_Route(db.Model):
 class Stall(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     logo = file_upload.Column()
+    name = db.Column(db.String, unique=True)
     
     def __repr__(self):
-	    return '<Route %r>' % self.id
+	    return '<Stall %r>' % self.name
 
 class Food(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -114,7 +115,7 @@ class Food(db.Model):
     collecting_time = db.Column(db.DateTime, nullable=False)
 
     def __repr__(self):
-	    return '<Route %r>' % self.id
+	    return '<Food %r>' % self.id
 
 # Login page
 @app.route('/login', methods=['POST', 'GET'])
@@ -387,7 +388,11 @@ def confirm(token):
             res.delete()
             db.session.commit()
             return 'There was an error logging in :(\nContact us if there are any problems'
-    
+
+@app.route('/stalls/<token>')
+def stall(token):
+    abort(404)
+            
 # Drink stall
 # @app.route('/DrinkStall', methods=['POST', 'GET'])
 # @login_required

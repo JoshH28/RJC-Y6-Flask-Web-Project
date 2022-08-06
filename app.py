@@ -1,6 +1,8 @@
 from flask import Flask, redirect, url_for, request, render_template, abort, flash
 from flask_sqlalchemy import SQLAlchemy
-from flask_file_upload.file_upload import FileUpload
+from flask_wtf import FlaskForm
+from wtforms import FileField, SubmitField
+from wtforms.validators import InputRequired
 from sqlalchemy import exists, or_
 from secrets import choice
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -100,14 +102,14 @@ class Reset_Route(db.Model):
     def __repr__(self):
 	    return '<Route %r>' % self.route
 
-@file_upload.Model
 class Stall(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    logo = file_upload.Column()
-    name = db.Column(db.String, unique=True)
+    stall_name = db.Column(db.String, unique=True)
+    filename = db.Column(db.String)
+    data = db.Column(db.LargeBinary)
     
     def __repr__(self):
-	    return '<Stall %r>' % self.name
+	    return '<Stall %r>' % self.id
 
 class Food(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -388,11 +390,7 @@ def confirm(token):
             res.delete()
             db.session.commit()
             return 'There was an error logging in :(\nContact us if there are any problems'
-
-@app.route('/stalls/<token>')
-def stall(token):
-    abort(404)
-            
+    
 # Drink stall
 # @app.route('/DrinkStall', methods=['POST', 'GET'])
 # @login_required

@@ -290,9 +290,9 @@ def ForgetPass():
         if not account_query:
             return render_template('ForgetPass.html', incorrect=True)
         try:
-            new_route = ''.join(choice(string.ascii_letters) for _ in range(30))
+            new_route = token_urlsafe(30)
             while db.session.query(exists().where(Reset_Route.route==new_route)).scalar():
-                new_route = ''.join(choice(string.ascii_letters) for _ in range(30))
+                new_route = token_urlsafe(30)
 
             new_reset = Reset_Route(email=email,route=new_route)
 

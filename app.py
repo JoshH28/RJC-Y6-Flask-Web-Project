@@ -4,7 +4,7 @@ from flask_wtf import FlaskForm
 from wtforms import FileField, SubmitField
 from wtforms.validators import InputRequired
 from sqlalchemy import exists, or_
-from secrets import choice
+from secrets import choice, token_urlsafe
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from flask_login import UserMixin, login_user, LoginManager, logout_user, login_required, current_user
@@ -182,9 +182,9 @@ def signup():
         # Send email
 
         # Generate unique confirmation route
-        new_route = ''.join(choice(string.ascii_letters) for _ in range(30))
+        new_route = token_urlsafe(30)
         while db.session.query(exists().where(Confirmation_Route.route==new_route)).scalar():
-            new_route = ''.join(choice(string.ascii_letters) for _ in range(30))
+            new_route = token_urlsafe(30)
 
         # Generate salt
         new_salt = ''.join(choice(alphabets) for _ in range(50))

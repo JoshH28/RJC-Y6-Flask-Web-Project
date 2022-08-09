@@ -54,23 +54,21 @@
            		    	<input type="password" class="input" name="repassword">
             	   </div>
             	</div>
-                {% if username_taken or not password_correct or not pass_len %}
-    				{% if username_taken %}
-    					<div class="incorrect">Username or email has already been registered</div>
-    				{% endif %}
-    				{% if invalid_email %}
-    					<div class="incorrect">Invalid email</div>
-    				{% endif %}
-    				{% if not password_correct %}
-    					<div class="incorrect">Passwords do not match!</div>
-    				{% endif %}
-    				{% if not pass_len %}
-    					<div class="incorrect">Password length must be atleast 8 characters long!</div>
-    				{% endif %}
-    				{% if whitespace %}
-    					<div class="incorrect">Password must not contain any whitespaces!</div>
-    				{% endif %}
-                {% endif %}
+    			{% if username_taken %}
+    				<div class="incorrect">Username or email has already been registered</div>
+    			{% endif %}
+    			{% if not valid_email %}
+    				<div class="incorrect">Invalid email</div>
+    			{% endif %}
+    			{% if not password_correct %}
+    				<div class="incorrect">Passwords do not match!</div>
+    			{% endif %}
+    			{% if not pass_len %}
+    				<div class="incorrect">Password length must be atleast 8 characters long!</div>
+    			{% endif %}
+    			{% if whitespace %}
+    				<div class="incorrect">Password must not contain any whitespaces!</div>
+    			{% endif %}
             	<input type="submit" class="btn" value="Sign-Up">
             </form>
         </div>

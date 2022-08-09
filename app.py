@@ -24,11 +24,11 @@ EMAIL_ADDRESS = os.getenv("EMAIL_ADDRESS")
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
-app.config['ALLOWED_EXTENSIONS'] = ['png', 'svg', 'png', 'jpg', 'jpeg']
-app.config['MAX_CONTENT_PATH'] = 1000000000 # 1 gigabyte
+# app.config['ALLOWED_EXTENSIONS'] = ['png', 'svg', 'png', 'jpg', 'jpeg']
+# app.config['MAX_CONTENT_PATH'] = 1000000000 # 1 gigabyte
 db = SQLAlchemy(app)
 
-file_upload = FileUpload(app, db)
+# file_upload = FileUpload(app, db)
 
 alphabets = string.ascii_letters + string.digits + string.punctuation
 
@@ -182,9 +182,9 @@ def signup():
         # Send email
 
         # Generate unique confirmation route
-        new_route = token_urlsafe(30)
+        new_route = token_urlsafe()
         while db.session.query(exists().where(Confirmation_Route.route==new_route)).scalar():
-            new_route = token_urlsafe(30)
+            new_route = token_urlsafe()
 
         # Generate salt
         new_salt = ''.join(choice(alphabets) for _ in range(50))
@@ -264,10 +264,10 @@ def AddStall():
             flash('No file selected for uploading')
             return redirect(request.url)
             
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(filename)
-            return redirect('/')
+        # if file and allowed_file(file.filename):
+        #     filename = secure_filename(file.filename)
+        #     file.save(filename)
+        #     return redirect('/')
             
         else:
             flash('Allowed file types are txt, pdf, png, jpg, jpeg, gif')
@@ -407,5 +407,5 @@ def confirm(token):
 #     abort(404)
 
 
-# if __name__ == "__main__":
-#     app.run(host='0.0.0.0', port=random.randint(2000,9000), debug=True)
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=random.randint(2000,9000), debug=True)

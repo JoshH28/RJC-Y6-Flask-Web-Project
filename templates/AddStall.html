@@ -1,20 +1,41 @@
 {% extends 'base.html' %}
 
 {% block head %}
-
+    <link rel="stylesheet" href="../static/css/addStall.css">
 {% endblock %}
 
 {% block body %}
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            {% for message in messages %}
-                <div>{{ message }}</div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-    <form method="POST" action="/" enctype="multipart/form-data">
+    <!-- <form method="POST" action="/" enctype="multipart/form-data">
     <dl>
     <p><input type="file" name="file" autocomplete="off" required></p>
     </dl>
-    <p><input type="submit" value="Submit"></p>
+    <p><input type="submit" value="Submit"></p> -->
+
+    <section class="dishes" id="dishes">
+
+        <h3 class="sub-heading"> our dishes </h3>
+        <h1 class="heading"> Add stall </h1>
+    
+        <div class="container-main">
+            <div class="container-left">
+                <div class="picture">
+                    <img src="../static/assets/picture.png" alt="">
+                </div>
+                <div class="button">
+                    <p>add picture</p>
+                </div>
+            </div>
+            <div class="container-right">
+                <form class="forms">
+                    <label for="iname">Store name:</label>
+                    <input type="text" id="iname" name="iname">
+                    <!-- <label for="price">Store tag:</label>
+                    <input type="text" id="price" name="price"><br> -->
+                    <input type="submit" value="Submit" class="submit">
+                </form>
+            </div>
+        </div>
+    
+    </section>
+    
 {% endblock %}

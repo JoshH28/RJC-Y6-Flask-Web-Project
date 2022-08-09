@@ -12,7 +12,6 @@ import string
 import datetime
 import smtplib
 import os
-import random
 from email.message import EmailMessage
 from dotenv import load_dotenv
 
@@ -126,6 +125,8 @@ def login():
         new_username = request.form.get('username')
         new_password = request.form.get('password')
 
+        new_username = new_username.strip()
+
         # disgusting code to check if account alr exists
         account_query = Account.query.filter_by(username=new_username).first()
 
@@ -154,12 +155,15 @@ def signup():
         re_password = request.form.get('repassword')
         new_email = request.form.get('email')
 
+        new_username = new_username.strip()
+        new_email = new_email.strip()
+
         # disgusting code to check if username alr exists
         account_exists = db.session.query(exists().where(or_(Account.user_email==new_email,Account.username==new_username))).scalar()
 
         valid_email = True
 
-        if len(new_email)<16 or new_email[len(new_email)-16:]!="@students.edu.sg":
+        if len(new_email)<16 or new_email[len(new_email)-16:]!="@students.edu.sg" or ' ' in new_email:
             valid_email = False
 
         if account_exists: # Username or email taken
@@ -286,13 +290,17 @@ def Profile():
 def ForgetPass():
     if request.method == "POST":
         email = request.form.get("email")
+
+        email = email.strip()
+
         account_query = Account.query.filter_by(user_email=email).first()
-        if not account_query:
+        if not(account_query) or ' ' in email:
             return render_template('ForgetPass.html', incorrect=True)
+
         try:
-            new_route = token_urlsafe(30)
+            new_route = token_urlsafe()
             while db.session.query(exists().where(Reset_Route.route==new_route)).scalar():
-                new_route = token_urlsafe(30)
+                new_route = token_urlsafe()
 
             new_reset = Reset_Route(email=email,route=new_route)
 
@@ -408,4 +416,4 @@ def confirm(token):
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=random.randint(2000,9000), debug=True)
+    app.run(debug=True)

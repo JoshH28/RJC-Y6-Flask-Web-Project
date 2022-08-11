@@ -731,7 +731,7 @@ header .icons #menu-bars{
 
 .container-left{
     height: 40rem;
-    width:50%;
+    width: 50%;
     background-color: #eeeeeeff;
     display: flex;
     flex-direction: column;
@@ -744,15 +744,14 @@ header .icons #menu-bars{
     width: 98%;
     display: flex;
     justify-content: center;
-    align-items: flex-end;
-    height: 24rem;
+    align-items: center;
+    height: 20rem;
 }
 
 .picture img{
     width: 20rem;
     height: 16rem;
 }
-
 
 .button{
     background-color: #4edfadff;

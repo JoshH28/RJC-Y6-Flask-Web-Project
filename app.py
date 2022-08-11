@@ -324,7 +324,7 @@ def ForgetPass():
 
             return "An email has been sent to your email containing the password reset link"
         except:
-            return "There was an error resetting your password :(\nPlease contact us if there are any issues"
+            return "There was an error resetting your password :(\nTry connecting to a different network or contact us if there are any issues"
     else:
         return render_template('ForgetPass.html', incorrect=False)
 

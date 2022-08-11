@@ -49,8 +49,8 @@ section:nth-child(even){
 }
 
 .addbtn{
-    left: 78%;
-    top: 12.5%;
+    left: 84.5rem;
+    top: 8.5rem;
     position: absolute;
     margin-top: 1rem;
     display: inline-block;

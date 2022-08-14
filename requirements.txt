@@ -8,3 +8,4 @@ Flask-Reuploaded
 email-validator
 pillow
 numpy
+flask-bcrypt

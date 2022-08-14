@@ -7,10 +7,11 @@ from wtforms import FileField, SubmitField, StringField, PasswordField
 from wtforms.validators import InputRequired
 from sqlalchemy import exists, or_
 from secrets import choice, token_urlsafe
-from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
+from flask_bcrypt import Bcrypt, check_password_hash, generate_password_hash
 from flask_login import UserMixin, login_user, LoginManager, logout_user, login_required, current_user
 from flask_uploads import configure_uploads, IMAGES, UploadSet
+from hashlib import sha512
 import string
 import datetime
 import smtplib
@@ -33,6 +34,7 @@ app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
 app.config['UPLOADED_IMAGES_DEST'] = 'static/assets/StallLogos'
 app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024 * 5
 csrf = CSRFProtect(app)
+flask_bcrypt = Bcrypt(app)
 db = SQLAlchemy(app)
 
 images = UploadSet('images', IMAGES)
@@ -95,6 +97,10 @@ class Account(db.Model, UserMixin):
     user_email = db.Column(db.String, unique=True, nullable=False)
     pass_hash = db.Column(db.String, nullable=False)
     salt = db.Column(db.String(64), nullable=False)
+    salt2 = db.Column(db.String(64), nullable=False)
+    salt3 = db.Column(db.String(64), nullable=False)
+    salt4 = db.Column(db.String(64), nullable=False)
+    salt5 = db.Column(db.String(64), nullable=False)
     is_stallowner = db.Column(db.Boolean, nullable=False)
     stall_id = db.Column(db.Integer, unique=True)
     logged_in = db.Column(db.Boolean, default=False)
@@ -121,6 +127,10 @@ class Confirmation_Route(db.Model):
     email = db.Column(db.String, nullable=False)
     pass_hash = db.Column(db.String, nullable=False)
     salt = db.Column(db.String(64), nullable=False)
+    salt2 = db.Column(db.String(64), nullable=False)
+    salt3 = db.Column(db.String(64), nullable=False)
+    salt4 = db.Column(db.String(64), nullable=False)
+    salt5 = db.Column(db.String(64), nullable=False)
     is_stallowner = db.Column(db.Boolean, nullable=False)
     is_admin = db.Column(db.Boolean, nullable=False)
 
@@ -169,9 +179,27 @@ def login():
             return render_template('login.html', incorrect=True, form=form)
 
         salt = account_query.salt
-        new_password = salt[:32] + new_password + salt[32:]
+        salt2 = account_query.salt2
+        salt3 = account_query.salt3
+        salt4 = account_query.salt4
+        salt5 = account_query.salt5
 
-        result = check_password_hash(account_query.pass_hash, new_password)
+        new_password = salt[:32] + new_password + salt[32:]
+        new_password = sha512(new_password.encode('utf-8')).hexdigest()
+
+        new_password += salt2
+        new_password = sha512(new_password.encode('utf-8')).hexdigest()
+
+        new_password += salt3
+        new_password = sha512(new_password.encode('utf-8')).hexdigest()
+
+        new_password += salt4
+        new_password = sha512(new_password.encode('utf-8')).hexdigest()
+
+        new_password += salt5
+        new_password = sha512(new_password.encode('utf-8')).hexdigest()
+
+        result = flask_bcrypt.check_password_hash(account_query.pass_hash, new_password)
 
         if result:
             login_user(account_query)
@@ -227,8 +255,27 @@ def signup():
 
         # Generate salt
         new_salt = ''.join(choice(alphabets) for _ in range(64))
+        new_salt2 = ''.join(choice(alphabets) for _ in range(64))
+        new_salt3 = ''.join(choice(alphabets) for _ in range(64))
+        new_salt4 = ''.join(choice(alphabets) for _ in range(64))
+        new_salt5 = ''.join(choice(alphabets) for _ in range(64))
+
         new_password = new_salt[:32] + new_password + new_salt[32:]
-        new_confirmation_route = Confirmation_Route(is_admin=(new_username=="AMOS") ,is_stallowner=(new_username=="AMOS"), route=new_route, email=new_email, username=new_username, salt=new_salt, pass_hash=generate_password_hash(new_password, method = 'sha512'))
+        new_password = sha512(new_password.encode('utf-8')).hexdigest()
+
+        new_password += new_salt2
+        new_password = sha512(new_password.encode('utf-8')).hexdigest()
+
+        new_password += new_salt3
+        new_password = sha512(new_password.encode('utf-8')).hexdigest()
+
+        new_password += new_salt4
+        new_password = sha512(new_password.encode('utf-8')).hexdigest()
+
+        new_password += new_salt5
+        new_password = sha512(new_password.encode('utf-8')).hexdigest()
+
+        new_confirmation_route = Confirmation_Route(is_admin=(new_username=="AMOS") ,is_stallowner=(new_username=="AMOS"), route=new_route, email=new_email, username=new_username, salt=new_salt, salt2=new_salt2, salt3=new_salt3, salt4=new_salt4, salt5=new_salt5, pass_hash=flask_bcrypt.generate_password_hash(new_password, 10))
 
         # Stall owner and admin only if username is AMOS
 
@@ -432,20 +479,46 @@ def passreset(token):
     form = ResetPassForm()
 
     if form.validate_on_submit():
-        password = form.password.data
+        new_password = form.password.data
         re_pass = form.repassword.data
-        whitespace = ' ' in password
-        password_correct = (password == re_pass)
-        pass_len = (len(password)>=8)
+
+        whitespace = ' ' in new_password
+        password_correct = (new_password == re_pass)
+        pass_len = (len(new_password)>=8)
         if whitespace or not(password_correct) or not(pass_len):
             return render_template("ChangePass.html", whitespace=whitespace, password_correct=password_correct, pass_len=pass_len, form=form)
 
         try:
             account = Account.query.filter_by(user_email=result.email).first()
+
             new_salt = ''.join(choice(alphabets) for _ in range(64))
-            password = new_salt[:32] + password + new_salt[32:]
+            new_salt2 = ''.join(choice(alphabets) for _ in range(64))
+            new_salt3 = ''.join(choice(alphabets) for _ in range(64))
+            new_salt4 = ''.join(choice(alphabets) for _ in range(64))
+            new_salt5 = ''.join(choice(alphabets) for _ in range(64))
+
+            new_password = new_salt[:32] + new_password + new_salt[32:]
+            new_password = sha512(new_password.encode('utf-8')).hexdigest()
+
+            new_password += new_salt2
+            new_password = sha512(new_password.encode('utf-8')).hexdigest()
+
+            new_password += new_salt3
+            new_password = sha512(new_password.encode('utf-8')).hexdigest()
+
+            new_password += new_salt4
+            new_password = sha512(new_password.encode('utf-8')).hexdigest()
+
+            new_password += new_salt5
+            new_password = sha512(new_password.encode('utf-8')).hexdigest()
+
             account.salt = new_salt
-            account.pass_hash = generate_password_hash(password, method = 'sha512')
+            account.salt2 = new_salt2
+            account.salt3 = new_salt3
+            account.salt4 = new_salt4
+            account.salt5 = new_salt5
+
+            account.pass_hash = flask_bcrypt.generate_password_hash(new_password, 10)
             res.delete()
             db.session.commit()
             login_user(account)
@@ -478,7 +551,7 @@ def confirm(token):
         return 'This verification link has expired. Please make a new one.'
 
     try:
-        new_account = Account(logged_in=False, is_admin=result.is_stallowner ,is_stallowner=result.is_stallowner, username=result.username, user_email=result.email, pass_hash=result.pass_hash, salt=result.salt)
+        new_account = Account(logged_in=False, is_admin=result.is_stallowner ,is_stallowner=result.is_stallowner, username=result.username, user_email=result.email, pass_hash=result.pass_hash, salt=result.salt, salt2=result.salt2, salt3=result.salt3, salt4=result.salt4, salt5=result.salt5)
         db.session.add(new_account)
         res.delete()
         db.session.commit()

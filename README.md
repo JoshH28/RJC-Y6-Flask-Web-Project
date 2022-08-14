@@ -6,3 +6,6 @@ This gives the canteen stall owners more time to prepare food, and can help user
 
 This initiative is founded by the Robotics Club, and is executed by the Coding Group of the club.
 Notable contributors are: Mr Nathan, Hayden How, Ernest Kiew, Lim Chang Jun and Josiah Huang
+
+For installation of libraries, download pip and enter "pip install" followed by name in requirements.txt
+This website is made with the flask framework in python along with its many other libraries

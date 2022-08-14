@@ -28,6 +28,7 @@ EMAIL_ADDRESS = os.getenv("EMAIL_ADDRESS")
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
+app.config['WTF_CSRF_SECRET_KEY'] = os.getenv("SECRET_CSRF_KEY")
 app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
 app.config['UPLOADED_IMAGES_DEST'] = 'static/assets/StallLogos'
 app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024 * 5

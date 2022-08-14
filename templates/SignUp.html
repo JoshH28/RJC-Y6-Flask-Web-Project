@@ -16,6 +16,7 @@
 		</div>
 		<div class="login-content">
 			<form method="POST">
+				{{ form.csrf_token() }}
 				<img src="../static/assets/avatar.svg">
 				<h2 class="title">Sign-up</h2>
            		<div class="input-div one">
@@ -24,7 +25,8 @@
            		   </div>
            		   <div class="div">
            		   		<h5>Enter new username</h5>
-           		   		<input type="text" class="input" name="username">
+           		   		<!-- <input type="text" class="input" name="username"> -->
+						{{ form.username(class_="input") }}
            		   </div>
            		</div>
                 <div class="input-div one">
@@ -33,7 +35,8 @@
            		   </div>
            		   <div class="div">
            		   		<h5>Enter new email (Student icon)</h5>
-           		   		<input type="text" class="input" name="email">
+           		   		<!-- <input type="text" class="input" name="email"> -->
+						{{ form.email(class_="input") }}
            		   </div>
            		</div>
            		<div class="input-div pass">
@@ -42,7 +45,8 @@
            		   </div>
            		   <div class="div">
            		    	<h5>Enter password</h5>
-           		    	<input type="password" class="input" name="password">
+           		    	<!-- <input type="password" class="input" name="password"> -->
+						{{ form.password(class_="input") }}
             	   </div>
             	</div>
            		<div class="input-div pass">
@@ -51,7 +55,8 @@
            		   </div>
            		   <div class="div">
            		    	<h5>Re-Enter password</h5>
-           		    	<input type="password" class="input" name="repassword">
+           		    	<!-- <input type="password" class="input" name="repassword"> -->
+						{{ form.repassword(class_="input") }}
             	   </div>
             	</div>
     			{% if username_taken %}
@@ -69,7 +74,8 @@
     			{% if whitespace %}
     				<div class="incorrect">Password must not contain any whitespaces!</div>
     			{% endif %}
-            	<input type="submit" class="btn" value="Sign-Up">
+            	<!-- <input type="submit" class="btn" value="Sign-Up"> -->
+				{{ form.submit(class_="btn") }}
             </form>
         </div>
     </div>

@@ -16,6 +16,7 @@
 		</div>
 		<div class="login-content">
 			<form method="POST">
+				{{ form.csrf_token() }}
 				<img src="../static/assets/avatar.svg">
 				<h2 class="title">Welcome</h2>
            		<div class="input-div one">
@@ -24,7 +25,8 @@
            		   </div>
            		   <div class="div">
            		   		<h5>Username</h5>
-           		   		<input type="text" class="input" name="username">
+						{{ form.username(class_="input") }}
+           		   		<!-- <input type="text" class="input" name="username"> -->
            		   </div>
            		</div>
            		<div class="input-div pass">
@@ -33,7 +35,8 @@
            		   </div>
            		   <div class="div">
            		    	<h5>Password</h5>
-           		    	<input type="password" class="input" name="password">
+						{{ form.password(class_="input") }}
+           		    	<!-- <input type="password" class="input" name="password"> -->
             	   </div>
             	</div>
 				{% if incorrect %}
@@ -41,7 +44,8 @@
 				{% endif %}
 				<a href="SignUp">Don't have an account? Create one!</a>
             	<a href="ForgetPass">Forgot password?</a>
-            	<input type="submit" class="btn" value="Login">
+            	<!-- <input type="submit" class="btn" value="Login"> -->
+				{{ form.submit(class_="btn") }}
             </form>
         </div>
     </div>

@@ -797,7 +797,7 @@ header .icons #menu-bars{
     margin: auto;
 }
 
-.submit{
+/* .submit{
     background-color: #4edfadff;
     height: 3rem;
     width: 12rem;
@@ -808,4 +808,14 @@ header .icons #menu-bars{
     margin: auto;
     font-size: 1.5rem;
     font-weight: bold;
+    cursor: pointer;
+} */
+
+.error {
+	font-size: 105%;
+    margin-bottom: 6px;
+	color: red;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

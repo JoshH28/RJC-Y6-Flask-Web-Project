@@ -5,36 +5,38 @@
 {% endblock %}
 
 {% block body %}
-    <!-- <form method="POST" action="/" enctype="multipart/form-data">
-    <dl>
-    <p><input type="file" name="file" autocomplete="off" required></p>
-    </dl>
-    <p><input type="submit" value="Submit"></p> -->
 
     <section class="dishes" id="dishes">
 
         <h3 class="sub-heading"> our dishes </h3>
         <h1 class="heading"> Add stall </h1>
     
-        <div class="container-main">
+        <form  class="container-main" method="POST" enctype="multipart/form-data">
+            {{ form.csrf_token() }}
             <div class="container-left">
                 <div class="picture">
                     <img src="../static/assets/picture.png" alt="">
                 </div>
-                <div class="button">
-                    <p>add picture</p>
-                </div>
+                
+                {{ form.logo }}
+
+                <br>
+                
             </div>
             <div class="container-right">
-                <form class="forms">
-                    <label for="iname">Store name:</label>
-                    <input type="text" id="iname" name="iname">
-                    <!-- <label for="price">Store tag:</label>
-                    <input type="text" id="price" name="price"><br> -->
-                    <input type="submit" value="Submit" class="submit">
-                </form>
+                <div class="forms">
+                    <label for="iname">Store name</label>
+                    {{ form.stall_name(style="padding-top: 3px; padding-bottom: 3px; padding-left: 10px; padding-right: 10px;")}}
+                    
+                    {% for field in form.errors %}
+                        {% for error in form.errors[field] %}
+                            <strong class="error">{{ error }}</strong>
+                        {% endfor %}
+                    {% endfor %}
+                    {{ form.submit(class_="btn") }}
+                </div>
             </div>
-        </div>
+        </form>
     
     </section>
     

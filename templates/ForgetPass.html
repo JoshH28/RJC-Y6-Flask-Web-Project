@@ -16,6 +16,7 @@
 		</div>
 		<div class="login-content">
 			<form method="POST">
+				{{ form.csrf_token() }}
 				<img src="../static/assets/avatar.svg">
 				<h2 class="title">Password reset</h2>
            		<div class="input-div one">
@@ -24,13 +25,15 @@
            		   </div>
            		   <div class="div">
            		   		<h5>Email</h5>
-           		   		<input type="text" class="input" name="email">
+           		   		<!-- <input type="text" class="input" name="email"> -->
+						{{ form.email(class_="input") }}
            		   </div>
            		</div>
 				{% if incorrect %}
 					<div class="incorrect">Email does not exist</div>
 				{% endif %}
-            	<input type="submit" class="btn" value="Send password reset link">
+            	<!-- <input type="submit" class="btn" value="Send password reset link"> -->
+				{{ form.submit(class_="btn") }}
             </form>
         </div>
     </div>

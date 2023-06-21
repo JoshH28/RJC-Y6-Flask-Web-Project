@@ -185,12 +185,6 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
-# Home page
-@app.route('/', methods=['POST', 'GET'])
-@login_required
-def HomePage():
-    return render_template('HomePage.html')
-
 # Checkout
 @app.route('/checkout', methods=['POST', 'GET'])
 @login_required
@@ -297,6 +291,23 @@ def confirm(token):
         user.confirmed = True
         session.commit()
         return 'Account successfully created!'
+
+# Home page
+@app.route('/', methods=['POST', 'GET'])
+@login_required
+def HomePage():
+    return render_template('HomePage.html', stalls=session.query(Stall).all())
+
+# Stall page
+@app.route('/<stall_name>', methods=['POST', 'GET'])
+@login_required
+def StallPage(stall_name):
+    stall_name2 = stall_name.replace('_', ' ')
+    stall = session.scalars(select(Stall).where(Stall.stall_name==stall_name2)).first()
+    if not stall:
+        abort(404)
+
+    return render_template('stall.html', food_items=stall.food_items)
     
 if __name__ == "__main__":
     # http_server = WSGIServer(("0.0.0.0",85),app)

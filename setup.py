@@ -9,9 +9,27 @@ subprocess.call('python create_tables.py')
 
 from sqlalchemy.orm import Session
 from connect import engine
-from models import User
+from models import User, Stall, Food
 
 session = Session(engine)
+
+f = open("stall_and_food_data.txt", "r")
+
+no_of_stalls = int(f.readline().strip())
+
+for _ in range(no_of_stalls):
+    stall_name = f.readline().strip()
+    stall_dir  = f.readline().strip()
+    no_of_food = int(f.readline().strip())
+    new_stall = Stall(stall_name=stall_name, image_directory=stall_dir)
+    for i in range(no_of_food):
+        food_name = f.readline().strip()
+        image_dir = f.readline().strip()
+        cost = float(f.readline().strip())
+        new_food = Food(food_name=food_name, image_directory=image_dir, cost=cost)
+        session.add(new_food)
+        new_stall.food_items.append(new_food)
+    session.add(new_stall)
 
 new_username = 'haydendoo'
 new_password = 'qqqqqqqq'

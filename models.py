@@ -1,5 +1,5 @@
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
-from sqlalchemy import String, ForeignKey, Integer
+from sqlalchemy import String, ForeignKey, Float
 from flask_login import UserMixin
 from typing import List
 
@@ -31,6 +31,7 @@ class Stall(Base):
     __tablename__ = "stalls"
     id: Mapped[int] = mapped_column(primary_key=True)
     stall_name: Mapped[str] = mapped_column(String(100), unique=True, nullable=False)
+    image_directory: Mapped[str] = mapped_column(String(300))
 
     food_items: Mapped[List["Food"]] = relationship(back_populates="stall", lazy=True)
     
@@ -38,6 +39,7 @@ class Food(Base):
     __tablename__ = "foods"
     id: Mapped[int] = mapped_column(primary_key=True)
     food_name: Mapped[str] = mapped_column(String(100), nullable=False)
+    cost: Mapped[float] = mapped_column(Float)
     image_directory: Mapped[str] = mapped_column(String(300))
 
     stall_id: Mapped[int] = mapped_column(ForeignKey("stalls.id"))

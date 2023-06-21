@@ -30,10 +30,11 @@
 
 </header>
 
-<footer class="footer">
-    <p>&copy; 2023 Anderson Orders. All rights reserved.</p>
+{% block body %} {% endblock %}
+<footer style="background-color: #f5f5f5; padding: 20px; text-align: center; left: 0; bottom: 0;">
+    <p style="font-size: 15px; text-transform: none;">&copy; 2023 Anderson Orders. All rights reserved.</p>
     <br>
-    <p>Contact us at andecanteen@gmail.com</p>
+    <p style="font-size: 15px; text-transform: none;">Contact us at andecanteen@gmail.com</p>
     <script>
     if(window.history.replaceState) {
         window.history.replaceState(null, null, window.location.href);
@@ -42,6 +43,5 @@
     {% block footer %} {% endblock %}
 </footer>
 
-{% block body %} {% endblock %}
 </body>
 </html>

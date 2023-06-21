@@ -4,8 +4,5 @@ python-dotenv
 flask-login
 flask-wtf
 wtforms
-Flask-Reuploaded
 email-validator
-pillow
-numpy
 flask-bcrypt

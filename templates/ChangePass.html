@@ -25,7 +25,6 @@
            		   </div>
            		   <div class="div">
            		    	<h5>Password</h5>
-           		    	<!-- <input type="password" class="input" name="password"> -->
 						{{ form.password(class_="input") }}
             	   </div>
             	</div>
@@ -35,24 +34,25 @@
            		   </div>
            		   <div class="div">
            		    	<h5>Re-Enter Password</h5>
-           		    	<!-- <input type="password" class="input" name="repassword"> -->
-						{{ form.repassword(class_="input") }}
+						{{ form.confirm(class_="input") }}
             	   </div>
             	</div>
-				{% if not password_correct %}
-					<div class="incorrect">Passwords do not match!</div>
-				{% endif %}
-				{% if not pass_len %}
-					<div class="incorrect">Password length must be atleast 8 characters long!</div>
-				{% endif %}
-				{% if whitespace %}
-					<div class="incorrect">Password must not contain any whitespaces!</div>
-				{% endif %}
-            	<!-- <input type="submit" class="btn" value="Change password"> -->
+				{% for field, errors in form.errors.items() %}
+					<div class="incorrect">
+						{{ ''.join(errors) }}
+					</div>
+				{% endfor %}
 				{{ form.submit(class_="btn") }}
             </form>
         </div>
     </div>
     <script type="text/javascript" src="../static/scripts/login.js"></script>
 </body>
+<footer>
+<script>
+	if ( window.history.replaceState ) {
+		window.history.replaceState( null, null, window.location.href );
+	}
+</script>
+</footer>
 </html>

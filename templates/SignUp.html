@@ -25,7 +25,6 @@
            		   </div>
            		   <div class="div">
            		   		<h5>Enter new username</h5>
-           		   		<!-- <input type="text" class="input" name="username"> -->
 						{{ form.username(class_="input") }}
            		   </div>
            		</div>
@@ -34,8 +33,7 @@
            		   		<i class="fas fa-user"></i>
            		   </div>
            		   <div class="div">
-           		   		<h5>Enter new email (Student icon)</h5>
-           		   		<!-- <input type="text" class="input" name="email"> -->
+           		   		<h5>Enter new email</h5>
 						{{ form.email(class_="input") }}
            		   </div>
            		</div>
@@ -45,7 +43,6 @@
            		   </div>
            		   <div class="div">
            		    	<h5>Enter password</h5>
-           		    	<!-- <input type="password" class="input" name="password"> -->
 						{{ form.password(class_="input") }}
             	   </div>
             	</div>
@@ -55,30 +52,28 @@
            		   </div>
            		   <div class="div">
            		    	<h5>Re-Enter password</h5>
-           		    	<!-- <input type="password" class="input" name="repassword"> -->
-						{{ form.repassword(class_="input") }}
+						{{ form.confirm(class_="input") }}
             	   </div>
             	</div>
     			{% if username_taken %}
     				<div class="incorrect">Username or email has already been registered</div>
     			{% endif %}
-    			{% if not valid_email %}
-    				<div class="incorrect">Invalid email</div>
-    			{% endif %}
-    			{% if not password_correct %}
-    				<div class="incorrect">Passwords do not match!</div>
-    			{% endif %}
-    			{% if not pass_len %}
-    				<div class="incorrect">Password length must be atleast 8 characters long!</div>
-    			{% endif %}
-    			{% if whitespace %}
-    				<div class="incorrect">Password must not contain any whitespaces!</div>
-    			{% endif %}
-            	<!-- <input type="submit" class="btn" value="Sign-Up"> -->
+				{% for field, errors in form.errors.items() %}
+					<div class="incorrect">
+						{{ ''.join(errors) }}
+					</div>
+				{% endfor %}
 				{{ form.submit(class_="btn") }}
             </form>
         </div>
     </div>
     <script type="text/javascript" src="../static/scripts/login.js"></script>
 </body>
+<footer>
+<script>
+	if ( window.history.replaceState ) {
+		window.history.replaceState( null, null, window.location.href );
+	}
+</script>
+</footer>
 </html>

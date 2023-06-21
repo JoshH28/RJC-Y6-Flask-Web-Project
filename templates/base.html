@@ -23,7 +23,6 @@
 
     <div class="icons">
         <i class="fas fa-bars" id="menu-bars"></i>
-        <i class="fas fa-search" id="search-icon"></i>
         <a href="#" class="fas fa-heart"></a>
         <a href="checkout" class="fas fa-shopping-cart"></a>
         <a href="{{ url_for('logout') }}" class="fas fa-sign-out-alt"></a>
@@ -31,11 +30,17 @@
 
 </header>
 
-<form action="" id="search-form">
-    <input type="search" placeholder="search here..." name="" id="search-box">
-    <label for="search-box" class="fas fa-search"></label>
-    <i class="fas fa-times" id="close"></i>
-</form>
+<footer class="footer">
+    <p>&copy; 2023 Anderson Orders. All rights reserved.</p>
+    <br>
+    <p>Contact us at andecanteen@gmail.com</p>
+    <script>
+    if(window.history.replaceState) {
+        window.history.replaceState(null, null, window.location.href);
+    }
+    </script>
+    {% block footer %} {% endblock %}
+</footer>
 
 {% block body %} {% endblock %}
 </body>

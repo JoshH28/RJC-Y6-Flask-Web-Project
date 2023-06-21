@@ -26,7 +26,6 @@
            		   <div class="div">
            		   		<h5>Username</h5>
 						{{ form.username(class_="input") }}
-           		   		<!-- <input type="text" class="input" name="username"> -->
            		   </div>
            		</div>
            		<div class="input-div pass">
@@ -36,7 +35,6 @@
            		   <div class="div">
            		    	<h5>Password</h5>
 						{{ form.password(class_="input") }}
-           		    	<!-- <input type="password" class="input" name="password"> -->
             	   </div>
             	</div>
 				{% if incorrect %}
@@ -44,11 +42,18 @@
 				{% endif %}
 				<a href="SignUp">Don't have an account? Create one!</a>
             	<a href="ForgetPass">Forgot password?</a>
-            	<!-- <input type="submit" class="btn" value="Login"> -->
 				{{ form.submit(class_="btn") }}
             </form>
         </div>
     </div>
     <script type="text/javascript" src="../static/scripts/login.js"></script>
 </body>
+<footer>
+<script>
+	if ( window.history.replaceState ) {
+		window.history.replaceState( null, null, window.location.href );
+	}
+</script>
+</footer>
+
 </html>

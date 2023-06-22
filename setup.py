@@ -64,9 +64,7 @@ new_password = sha512(new_password.encode('utf-8')).hexdigest()
 
 import flask_bcrypt
 
-new_order = Order(food_orders='')
-session.add(new_order)
-new_User = User(username=new_username, user_email=new_email, pass_hash=flask_bcrypt.generate_password_hash(new_password, 10), salt=new_salt, salt2=new_salt2, salt3=new_salt3, salt4=new_salt4, salt5=new_salt5, confirmed=True, current_order=new_order)
+new_User = User(username=new_username, user_email=new_email, pass_hash=flask_bcrypt.generate_password_hash(new_password, 10), salt=new_salt, salt2=new_salt2, salt3=new_salt3, salt4=new_salt4, salt5=new_salt5, confirmed=True)
 session.add(new_User)
 session.commit()
 

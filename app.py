@@ -11,7 +11,7 @@ import os
 from email.message import EmailMessage
 from dotenv import load_dotenv
 from models import User, Order, Stall, Food
-from forms import LoginForm, SignUpForm, ForgetPassForm, ResetPassForm, CheckoutForm
+from forms import LoginForm, SignUpForm, ForgetPassForm, ResetPassForm, CheckoutForm, ChangePassForm
 from sqlalchemy.orm import Session
 from sqlalchemy import select, or_
 from sqlalchemy.sql import exists
@@ -160,9 +160,7 @@ def signup():
         new_password = sha512(new_password.encode('utf-8')).hexdigest()
 
         token = generate_confirmation_token(new_email)
-        new_order = Order(food_orders='')
-        session.add(new_order)
-        new_User = User(username=new_username, user_email=new_email, pass_hash=flask_bcrypt.generate_password_hash(new_password, 10), salt=new_salt, salt2=new_salt2, salt3=new_salt3, salt4=new_salt4, salt5=new_salt5, current_order=new_order)
+        new_User = User(username=new_username, user_email=new_email, pass_hash=flask_bcrypt.generate_password_hash(new_password, 10), salt=new_salt, salt2=new_salt2, salt3=new_salt3, salt4=new_salt4, salt5=new_salt5)
         session.add(new_User)
         session.commit()
 
@@ -193,12 +191,15 @@ def logout():
 def checkout():
     form = CheckoutForm()
     if form.validate_on_submit():
-        current_user.current_order.food_orders = ""
+        new_order = Order(food_orders=current_user.food_orders)
+        # session.add(new_order)
+        current_user.orders.append(new_order)
+        current_user.food_orders = ""
         session.commit()
         return redirect('/')
     subtotal = 0
     food_ordered = []
-    for item in current_user.current_order.food_orders.splitlines():
+    for item in current_user.food_orders.splitlines():
         temp = item.split('|')
         subtotal += int(temp[0]) * float(temp[2])
         food_ordered.append((temp[0], temp[1], temp[2], temp[3]))
@@ -208,12 +209,81 @@ def checkout():
 @app.route('/profile', methods=['POST', 'GET'])
 @login_required
 def profile():
-    return render_template('profile.html')
+    form = ChangePassForm()
+    if form.validate_on_submit():
+        current_pass = form.current_password.data
+        new_password = form.password.data
+
+        salt = current_user.salt
+        salt2 = current_user.salt2
+        salt3 = current_user.salt3
+        salt4 = current_user.salt4
+        salt5 = current_user.salt5
+
+        current_pass = salt[:32] + current_pass + salt[32:]
+        current_pass = sha512(current_pass.encode('utf-8')).hexdigest()
+
+        current_pass += salt2
+        current_pass = sha512(current_pass.encode('utf-8')).hexdigest()
+
+        current_pass += salt3
+        current_pass = sha512(current_pass.encode('utf-8')).hexdigest()
+
+        current_pass += salt4
+        current_pass = sha512(current_pass.encode('utf-8')).hexdigest()
+
+        current_pass += salt5
+        current_pass = sha512(current_pass.encode('utf-8')).hexdigest()
+
+        result = flask_bcrypt.check_password_hash(current_user.pass_hash, current_pass)
+
+        if not result:
+            return render_template('profile.html', user=current_user, form=form, incorrect_pass=True)
+
+        new_salt = ''.join(choice(alphabets) for _ in range(64))
+        new_salt2 = ''.join(choice(alphabets) for _ in range(64))
+        new_salt3 = ''.join(choice(alphabets) for _ in range(64))
+        new_salt4 = ''.join(choice(alphabets) for _ in range(64))
+        new_salt5 = ''.join(choice(alphabets) for _ in range(64))
+
+        new_password = new_salt[:32] + new_password + new_salt[32:]
+        new_password = sha512(new_password.encode('utf-8')).hexdigest()
+
+        new_password += new_salt2
+        new_password = sha512(new_password.encode('utf-8')).hexdigest()
+
+        new_password += new_salt3
+        new_password = sha512(new_password.encode('utf-8')).hexdigest()
+
+        new_password += new_salt4
+        new_password = sha512(new_password.encode('utf-8')).hexdigest()
+
+        new_password += new_salt5
+        new_password = sha512(new_password.encode('utf-8')).hexdigest()
+
+        current_user.salt = new_salt
+        current_user.salt2 = new_salt2
+        current_user.salt3 = new_salt3
+        current_user.salt4 = new_salt4
+        current_user.salt5 = new_salt5
+
+        current_user.pass_hash = flask_bcrypt.generate_password_hash(new_password, 10)
+        session.commit()
+
+    return render_template('profile.html', user=current_user, form=form, incorrect_pass=False)
 
 @app.route('/orders', methods=['POST', 'GET'])
 @login_required
 def orders():
-    return render_template('orders.html')
+    orders = []
+    for order in current_user.orders:
+        temp = order.food_orders
+        curr = []
+        for item in temp.splitlines():
+            qty, food, cost, stall = item.split('|')
+            curr.append((int(qty), food, float(cost), stall))
+        orders.append(curr)
+    return render_template('orders.html', orders=orders)
 
 @app.route('/ForgetPass', methods=['POST', 'GET'])
 def ForgetPass():
@@ -333,7 +403,7 @@ def add_to_cart(food_id):
     food = session.scalars(select(Food).where(Food.id==food_id)).first()
     if not food:
         abort(404)
-    food_orders = current_user.current_order.food_orders
+    food_orders = current_user.food_orders
     new_order = ""
     exists = False
     for item in food_orders.splitlines():
@@ -345,11 +415,43 @@ def add_to_cart(food_id):
             new_order += item + '\n'
     
     if exists:
-        current_user.current_order.food_orders = new_order
+        current_user.food_orders = new_order
     else:
-        current_user.current_order.food_orders = food_orders + (f"1|{food.food_name}|{food.cost}|{food.stall.stall_name}\n")
+        current_user.food_orders = food_orders + (f"1|{food.food_name}|{food.cost}|{food.stall.stall_name}\n")
     session.commit()
     return redirect('../' + food.stall.stall_name.replace(' ', '_'))
+
+@app.route('/increase-quantity/<index>')
+@login_required
+def increase_quantity(index):
+    food_orders = current_user.food_orders
+    new_order = ""
+    for i, item in enumerate(food_orders.splitlines()):
+        temp = item.split('|')
+        if i == int(index):
+            new_order += str(int(temp[0])+1) + '|' + temp[1] + '|' + temp[2] + '|' + temp[3] + '\n'
+        else:
+            new_order += item + '\n'
+    current_user.food_orders = new_order
+    session.commit()
+    return redirect('../checkout')
+    
+@app.route('/decrease-quantity/<index>')
+@login_required
+def decrease_quantity(index):
+    food_orders = current_user.food_orders
+    new_order = ""
+    for i, item in enumerate(food_orders.splitlines()):
+        temp = item.split('|')
+        if i == int(index):
+            if int(temp[0]) == 1:
+                continue
+            new_order += str(int(temp[0])-1) + '|' + temp[1] + '|' + temp[2] + '|' + temp[3] + '\n'
+        else:
+            new_order += item + '\n'
+    current_user.food_orders = new_order
+    session.commit()
+    return redirect('../checkout')
     
 if __name__ == "__main__":
     # http_server = WSGIServer(("0.0.0.0",85),app)

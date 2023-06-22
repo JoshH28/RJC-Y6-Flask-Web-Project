@@ -19,15 +19,22 @@ class User(Base, UserMixin):
     salt4: Mapped[str] = mapped_column(String(64), nullable=False)
     salt5: Mapped[str] = mapped_column(String(64), nullable=False)
 
-    current_order: Mapped['Order'] = relationship(back_populates="user", lazy=True)
+    food_orders: Mapped[str] = mapped_column(String, default="")
+    '''
+        DO NOT USE \n OR | IN THE NAMES OR ANYTHING
+        Separated by \n
+        quantity|food name|cost for 1 item|stall name
+    '''
+
+    orders: Mapped[List['Order']] = relationship(back_populates="user", lazy=True)
 
 class Order(Base):
     __tablename__ = "orders"
     id: Mapped[int] = mapped_column(primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id")) 
-    user: Mapped['User'] = relationship(back_populates="current_order", lazy=True)
+    user: Mapped['User'] = relationship(back_populates="orders", lazy=True)
 
-    food_orders: Mapped[str] = mapped_column(String)
+    food_orders: Mapped[str] = mapped_column(String, default='')
     '''
         DO NOT USE \n OR | IN THE NAMES OR ANYTHING
         Separated by \n

@@ -45,9 +45,9 @@
                   <tr>
                     <td>${{ '%0.2f' | format(food[2]|float) }}</td>
                     <td>
-                      <a href="">-</a>
+                      <a href="decrease-quantity/{{ loop.index0 }}">-</a>
                       {{ food[0] }}
-                      <a href="">+</a>
+                      <a href="increase-quantity/{{ loop.index0 }}">+</a>
                     </td>
                   </tr>
                 {% endfor %}

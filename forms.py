@@ -33,3 +33,13 @@ class ResetPassForm(FlaskForm):
 
 class CheckoutForm(FlaskForm):
     submit = SubmitField('Checkout')
+
+class ChangePassForm(FlaskForm):
+    current_password = PasswordField('Current Password', [validators.InputRequired()])
+    password = PasswordField('New Password', [
+        validators.InputRequired(),
+        validators.EqualTo('confirm', message='Passwords must match'),
+        validators.Length(min=8, message='Password minimum length of 8')
+    ])
+    confirm = PasswordField('Confirm Password', [validators.InputRequired()])
+    submit = SubmitField('Save')

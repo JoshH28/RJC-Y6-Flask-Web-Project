@@ -20,37 +20,56 @@
     <div class="profile-container">
         <div class="container-name">
             <div class="container-name-1">
-                <p>full name</p>
+                <p>Username</p>
             </div>
             <div class="container-name-2">
-                <p>Chang Jun Lim</p>
+                <p>{{ user.username }}</p>
             </div>
         </div>
-        <div class="container-class">
+        <!-- <div class="container-class">
             <div class="container-class-1">
                 <p>class</p>
             </div>
             <div class="container-class-2">
                 <p>3/1</p>
             </div>
-        </div>
+        </div> -->
         <div class="container-email">
             <div class="container-email-1">
-                <p>email</p>
+                <p>Email</p>
             </div>
             <div class="container-email-2">
-                <p>limchangjun123@gmail.com</p>
+                <p>{{ user.user_email }}</p>
             </div>
         </div>
-        <div class="container-pw">
-            <div class="container-pw-1">
-                <p>password</p>
+        <form method="POST">
+            {{ form.csrf_token() }}
+            <div class="form-group">
+                <p>Current Password</p>
+                {{ form.current_password(id="username") }}
             </div>
-            <div class="container-pw-2">
-                <p>am********os</p>
+            <div class="form-group">
+                <p>New Password</p>
+                {{ form.password(id="password") }}
             </div>
-        </div>
-        <img src="../static/assets/editIcon.svg" alt="edit" class="edit">
+            <div class="form-group">
+                <p>Confirm Password</p>
+                {{ form.confirm(id="confirmPassword") }}
+            </div>
+            <ul style="padding-left: 1.2rem;">
+                {% if incorrect_pass %}
+				    <li><div style="color: red;">Current password is incorrect!</div></li>
+                {% endif %}
+                {% for field, errors in form.errors.items() %}
+				    <li><div style="color: red;">{{ ''.join(errors) }}</div></li>
+			    {% endfor %}
+            </ul>
+            <div style="margin-top: 0.3rem;" class="form-group">
+                {{ form.submit() }}
+            </div>
+            <!-- <img src="../static/assets/editIcon.svg" alt="edit" class="edit"> -->
+        </form>
+        <a style="color: black; text-decoration: underline;" href="ForgetPass">Forgot password?</a>
     </div>
 </section>
 

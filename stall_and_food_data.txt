@@ -16,12 +16,18 @@ japanese_chickenCurryKatsu.jpg
 4.50
 Chicken Rice Stall
 chickenRice.png
-2
-Smoke Chicken Rice
+4
+Smoked Chicken Rice
 chicken_smokeChickenRice.jpg
 3.00
-Smoke Duck Rice
+Smoked Duck Rice
 chicken_smokeDuckRice.jpg
+3.00
+Char Siew Rice
+chicken_charSiewRice.jpg
+3.00
+Hainanese Chicken Rice
+chicken_hainaneseChickenRice.jpg
 3.00
 Western Stall
 western.png
@@ -55,7 +61,7 @@ fruit_orangeJuice.jpeg
 1.50
 Drink Stall
 drink.png
-3
+4
 Milo
 drink_milo.jpg
 1.00
@@ -64,6 +70,9 @@ drink_coffee.jpeg
 0.90
 Tea
 drink_tea.jpg
+0.90
+Packet Drink
+drink_packetDrink.jpg
 0.90
 Noodle Stall
 noodle.png
@@ -77,6 +86,6 @@ noodle_noodleSoup.jpg
 Maggi Noodle
 noodle_maggiNoodle.jpg
 2.50
-Pan Me
+Pan Me
 noodle_panMee.jpg
 3.00

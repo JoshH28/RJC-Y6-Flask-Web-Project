@@ -221,6 +221,10 @@ header .icons #menu-bars{
     gap:1.5rem;
 }
 
+.box{
+    max-width: 350px;
+}
+
 .dishes .box-container .box{
     padding:2.5rem;
     background:#fff;
@@ -243,6 +247,10 @@ header .icons #menu-bars{
     line-height: 5rem;
     font-size: 2rem;
     color:var(--black);
+}
+
+.box img{
+    max-width: 100%;
 }
 
 .dishes .box-container .box .fa-heart:hover,

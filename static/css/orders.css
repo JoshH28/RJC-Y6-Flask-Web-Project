@@ -593,48 +593,122 @@ header .icons #menu-bars{
 }
 
 
-.profile-container{
+.checkout-container{
     width: 80%;
     margin: auto;
     height: 40rem;
-    background-color: #dfdfdfff;
+    background-color: #fcfcfcff;
     position: relative;
-    padding-top: 2rem;
 }
 
-.container-name ,.container-email, .container-class, .container-pw{
-    display: flex;
+.checkout-container-1{
+    width: 41.5%;
+    height: 40rem;
+    background-color: #dfdfdfff;
+    display: inline-block;
+}
+
+.checkout-container-1 table{
     text-align: center;
-    margin: 0px;
+    width: 100%;
+}
+
+.checkout-container-1 th{
+    font-weight: normal;
     height: 5rem;
+    font-size: 1.2rem;
+}
+
+.checkout-container-1 td{
+    font-weight: bold;
+    height: 5rem;
+    font-size: 1.5rem;
+}
+
+
+.checkout-container-2{
+    width: 58%;
+    height: 40rem;
+    background-color: #fcfcfcff;
+    display: inline-block;
+}
+
+.checkout-container-2 table{
+    text-align: center;
+    width: 100%;
+}
+
+.checkout-container-2 th{
+    font-weight: normal;
+    height: 5rem;
+    font-size: 1.2rem;
+}
+
+.checkout-container-2 td{
+    font-weight: bold;
+    height: 5rem;
+    font-size: 1.5rem;
+}
+
+.checkout-container-2 td a{
+    text-decoration: none;
+    color: black;
+    padding: 0 1rem;
+}
+
+.checkout-container-3{
+    display: flex;
+    background-color: #4edfadff;
+    height: 8rem;
+    width: 100%;
+    bottom: 0px;
+    margin: none;
+    padding: none;
+    position: absolute;
+}
+
+.checkout-container-3-1{
+    display: inline-block;
+    width: 79.3%;
+    height: 100%;
+    text-align: left;
+}
+
+.checkout-container-3-1 p{
+    padding: 2rem 0 0rem 11rem;
     font-weight: bold;
     font-size: 1.5rem;
-    align-items: center;
-    position:relative;
 }
 
-.container-name-1, .container-email-1, .container-class-1, .container-pw-1{
-    width: 50%;
+.checkout-container-3-2{
+    display: inline-block;
+    width: 20%;
+    height:100%;
+    text-align: left;
 }
 
-.container-name-2, .container-email-2, .container-class-2, .container-pw-2{
-    width: 50%;
+.checkout-container-3-2-p{
+    padding: 1.2rem 0 0.8rem 3rem;
+    font-weight: bold;
+    font-size: 1.5rem;
 }
 
-.edit{
+.checkout-button{
+    border-radius: 20px;
+    width: 10rem;
     height: 3rem;
-    position: absolute;
-    bottom: 1.5rem;
-    right: 1.5rem;
+    background-color: black;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.edit:hover{
-    transform: rotate(360deg);
-    animation-timing-function: ease-out;
+.checkout-button a{
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.5rem;
 }
-  
-
-
 
 /* media queries  */
 
@@ -797,4 +871,3 @@ span.price {
     }
 
 }
-

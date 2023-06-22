@@ -1,4 +1,4 @@
-from flask import Flask, redirect, url_for,render_template, abort
+from flask import Flask, redirect, url_for,render_template, abort, request
 from flask_wtf.csrf import CSRFProtect
 from sqlalchemy import exists, or_
 from secrets import choice
@@ -189,7 +189,10 @@ def logout():
 @app.route('/checkout', methods=['POST', 'GET'])
 @login_required
 def checkout():
-    return render_template('checkout.html')
+    if request.method == "POST":
+        return redirect('/')
+    subtotal = sum(food.cost for food in current_user.food_ordered)
+    return render_template('checkout.html', food_ordered=current_user.food_ordered, subtotal=subtotal)
 
 # Profile to edit username or password
 @app.route('/profile', methods=['POST', 'GET'])
@@ -304,15 +307,26 @@ def HomePage():
     return render_template('HomePage.html', stalls=session.query(Stall).all())
 
 # Stall page
-@app.route('/<stall_name>', methods=['POST', 'GET'])
+@app.route('/<stall_name>')
 @login_required
 def StallPage(stall_name):
     stall_name2 = stall_name.replace('_', ' ')
     stall = session.scalars(select(Stall).where(Stall.stall_name==stall_name2)).first()
     if not stall:
         abort(404)
-
+    
     return render_template('stall.html', food_items=stall.food_items)
+
+@app.route('/add-to-cart/<food_id>')
+@login_required
+def add_to_cart(food_id):
+    food = session.scalars(select(Food).where(Food.id==food_id)).first()
+    if not food:
+        abort(404)
+    
+    current_user.food_ordered.append(food)
+    session.commit()
+    return redirect('../' + food.stall.stall_name.replace(' ', '_'))
     
 if __name__ == "__main__":
     # http_server = WSGIServer(("0.0.0.0",85),app)

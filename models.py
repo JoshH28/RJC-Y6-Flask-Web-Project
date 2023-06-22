@@ -1,10 +1,17 @@
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
-from sqlalchemy import String, ForeignKey, Float
+from sqlalchemy import String, ForeignKey, Float, Table, Column
 from flask_login import UserMixin
 from typing import List
 
 class Base(DeclarativeBase):
     pass
+
+assoc_table = Table(
+    "assoc_table",
+    Base.metadata,
+    Column("users_id", ForeignKey("users.id")),
+    Column("foods_id", ForeignKey("foods.id")),
+)
 
 class User(Base, UserMixin):
     __tablename__ = "users"
@@ -18,6 +25,8 @@ class User(Base, UserMixin):
     salt3: Mapped[str] = mapped_column(String(64), nullable=False)
     salt4: Mapped[str] = mapped_column(String(64), nullable=False)
     salt5: Mapped[str] = mapped_column(String(64), nullable=False)
+
+    food_ordered: Mapped[List['Food']] = relationship(secondary=assoc_table, lazy=True)
 
 class Order(Base):
     __tablename__ = "orders"

@@ -24,13 +24,14 @@
             <table>
                 <tr>
                   <th>Item</th>
+                  <th>Stall</th>
                 </tr>
-                <tr>
-                  <td>Coke</td>
-                </tr>
-                <tr>
-                  <td>Milo</td>
-                </tr>
+                {% for food in food_ordered %}
+                  <tr>
+                    <td>{{ food.food_name }}</td>
+                    <td>{{ food.stall.stall_name }}</td>
+                  </tr>
+                {% endfor %}
             </table>
         </div>
         <div class="checkout-container-2">
@@ -38,16 +39,10 @@
             <table>
                 <tr>
                     <th>Price</th>
-                    <th>Total</th>
                 </tr>
-                <tr>
-                    <td>$1.00</td>
-                    <td>$1.00</td>
-                </tr>
-                <tr>
-                    <td>$1.20</td>
-                    <td>$1.20</td>
-                </tr>
+                {% for food in food_ordered %}
+                  <tr><td>${{ '%0.2f' | format(food.cost|float) }}</td></tr>
+                {% endfor %}
             </table>
         </div>
         <div class="checkout-container-3">
@@ -56,10 +51,11 @@
                 <p>Subtotal</p>
             </div>
             <div class="checkout-container-3-2">
-                <p class="checkout-container-3-2-p">$2.20</p>
-                <div class="checkout-button">
-                    <a>Checkout</a>
-                </div>
+                <p class="checkout-container-3-2-p">${{ '%0.2f' | format(subtotal|float) }}</p>
+                <form method="POST">
+                  <input id="csrf_token" name="csrf_token" type="hidden" value="ImYyNjFjNGQ3YzQ2N2VmYTRjYTc2NTIzNTVmYTBkZDQ2ZDE3NTMzZjEi.ZJP03Q.V7SU1FG1hMe5mEHc5Db8DxuPUPM">
+                  <button type="submit" class="checkout-button" style="cursor: pointer">Checkout</button>
+                </form>
             </div>
         </div>
     </div>

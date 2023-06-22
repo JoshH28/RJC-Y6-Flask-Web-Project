@@ -11,7 +11,7 @@ import os
 from email.message import EmailMessage
 from dotenv import load_dotenv
 from models import User, Order, Stall, Food
-from forms import LoginForm, SignUpForm, ForgetPassForm, ResetPassForm
+from forms import LoginForm, SignUpForm, ForgetPassForm, ResetPassForm, CheckoutForm
 from sqlalchemy.orm import Session
 from sqlalchemy import select, or_
 from sqlalchemy.sql import exists
@@ -160,7 +160,9 @@ def signup():
         new_password = sha512(new_password.encode('utf-8')).hexdigest()
 
         token = generate_confirmation_token(new_email)
-        new_User = User(username=new_username, user_email=new_email, pass_hash=flask_bcrypt.generate_password_hash(new_password, 10), salt=new_salt, salt2=new_salt2, salt3=new_salt3, salt4=new_salt4, salt5=new_salt5)
+        new_order = Order(food_orders='')
+        session.add(new_order)
+        new_User = User(username=new_username, user_email=new_email, pass_hash=flask_bcrypt.generate_password_hash(new_password, 10), salt=new_salt, salt2=new_salt2, salt3=new_salt3, salt4=new_salt4, salt5=new_salt5, current_order=new_order)
         session.add(new_User)
         session.commit()
 
@@ -189,10 +191,18 @@ def logout():
 @app.route('/checkout', methods=['POST', 'GET'])
 @login_required
 def checkout():
-    if request.method == "POST":
+    form = CheckoutForm()
+    if form.validate_on_submit():
+        current_user.current_order.food_orders = ""
+        session.commit()
         return redirect('/')
-    subtotal = sum(food.cost for food in current_user.food_ordered)
-    return render_template('checkout.html', food_ordered=current_user.food_ordered, subtotal=subtotal)
+    subtotal = 0
+    food_ordered = []
+    for item in current_user.current_order.food_orders.splitlines():
+        temp = item.split('|')
+        subtotal += int(temp[0]) * float(temp[2])
+        food_ordered.append((temp[0], temp[1], temp[2], temp[3]))
+    return render_template('checkout.html', food_ordered=food_ordered, subtotal=subtotal, form=form)
 
 # Profile to edit username or password
 @app.route('/profile', methods=['POST', 'GET'])
@@ -323,8 +333,21 @@ def add_to_cart(food_id):
     food = session.scalars(select(Food).where(Food.id==food_id)).first()
     if not food:
         abort(404)
+    food_orders = current_user.current_order.food_orders
+    new_order = ""
+    exists = False
+    for item in food_orders.splitlines():
+        temp = item.split('|')
+        if food.food_name == temp[1]:
+            new_order += str(int(temp[0])+1) + '|' + temp[1] + '|' + temp[2] + '|' + temp[3] + '\n'
+            exists = True
+        else:
+            new_order += item + '\n'
     
-    current_user.food_ordered.append(food)
+    if exists:
+        current_user.current_order.food_orders = new_order
+    else:
+        current_user.current_order.food_orders = food_orders + (f"1|{food.food_name}|{food.cost}|{food.stall.stall_name}\n")
     session.commit()
     return redirect('../' + food.stall.stall_name.replace(' ', '_'))
     

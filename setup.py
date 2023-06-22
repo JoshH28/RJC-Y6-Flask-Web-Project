@@ -9,7 +9,7 @@ subprocess.call('python create_tables.py')
 
 from sqlalchemy.orm import Session
 from connect import engine
-from models import User, Stall, Food
+from models import User, Stall, Food, Order
 
 session = Session(engine)
 
@@ -64,7 +64,9 @@ new_password = sha512(new_password.encode('utf-8')).hexdigest()
 
 import flask_bcrypt
 
-new_User = User(username=new_username, user_email=new_email, pass_hash=flask_bcrypt.generate_password_hash(new_password, 10), salt=new_salt, salt2=new_salt2, salt3=new_salt3, salt4=new_salt4, salt5=new_salt5, confirmed=True)
+new_order = Order(food_orders='')
+session.add(new_order)
+new_User = User(username=new_username, user_email=new_email, pass_hash=flask_bcrypt.generate_password_hash(new_password, 10), salt=new_salt, salt2=new_salt2, salt3=new_salt3, salt4=new_salt4, salt5=new_salt5, confirmed=True, current_order=new_order)
 session.add(new_User)
 session.commit()
 

@@ -28,8 +28,8 @@
                 </tr>
                 {% for food in food_ordered %}
                   <tr>
-                    <td>{{ food.food_name }}</td>
-                    <td>{{ food.stall.stall_name }}</td>
+                    <td>{{ food[1] }}</td>
+                    <td>{{ food[3] }}</td>
                   </tr>
                 {% endfor %}
             </table>
@@ -38,10 +38,18 @@
             <!-- second div box -->
             <table>
                 <tr>
+                    <th>Quantity</th>
                     <th>Price</th>
                 </tr>
                 {% for food in food_ordered %}
-                  <tr><td>${{ '%0.2f' | format(food.cost|float) }}</td></tr>
+                  <tr>
+                    <td>${{ '%0.2f' | format(food[2]|float) }}</td>
+                    <td>
+                      <a href="">-</a>
+                      {{ food[0] }}
+                      <a href="">+</a>
+                    </td>
+                  </tr>
                 {% endfor %}
             </table>
         </div>
@@ -53,8 +61,8 @@
             <div class="checkout-container-3-2">
                 <p class="checkout-container-3-2-p">${{ '%0.2f' | format(subtotal|float) }}</p>
                 <form method="POST">
-                  <input id="csrf_token" name="csrf_token" type="hidden" value="ImYyNjFjNGQ3YzQ2N2VmYTRjYTc2NTIzNTVmYTBkZDQ2ZDE3NTMzZjEi.ZJP03Q.V7SU1FG1hMe5mEHc5Db8DxuPUPM">
-                  <button type="submit" class="checkout-button" style="cursor: pointer">Checkout</button>
+                  {{ form.csrf_token() }}
+                  {{ form.submit(class_="checkout-button", style="cursor: pointer;") }}
                 </form>
             </div>
         </div>

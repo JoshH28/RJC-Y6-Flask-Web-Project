@@ -1,17 +1,10 @@
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
-from sqlalchemy import String, ForeignKey, Float, Table, Column
+from sqlalchemy import String, ForeignKey, Float, Integer
 from flask_login import UserMixin
 from typing import List
 
 class Base(DeclarativeBase):
     pass
-
-assoc_table = Table(
-    "assoc_table",
-    Base.metadata,
-    Column("users_id", ForeignKey("users.id")),
-    Column("foods_id", ForeignKey("foods.id")),
-)
 
 class User(Base, UserMixin):
     __tablename__ = "users"
@@ -26,15 +19,21 @@ class User(Base, UserMixin):
     salt4: Mapped[str] = mapped_column(String(64), nullable=False)
     salt5: Mapped[str] = mapped_column(String(64), nullable=False)
 
-    food_ordered: Mapped[List['Food']] = relationship(secondary=assoc_table, lazy=True)
+    current_order: Mapped['Order'] = relationship(back_populates="user", lazy=True)
 
 class Order(Base):
     __tablename__ = "orders"
     id: Mapped[int] = mapped_column(primary_key=True)
-    username: Mapped[str] = mapped_column(String, nullable=False, unique=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id")) 
+    user: Mapped['User'] = relationship(back_populates="current_order", lazy=True)
 
-    food_id: Mapped[int] = mapped_column(ForeignKey("foods.id"))
-    food_ordered: Mapped['Food'] = relationship(back_populates="orders_placed", lazy=True)
+    food_orders: Mapped[str] = mapped_column(String)
+    '''
+        DO NOT USE \n OR | IN THE NAMES OR ANYTHING
+        Separated by \n
+        quantity|food name|cost for 1 item|stall name
+    '''
+    
 
 class Stall(Base):
     __tablename__ = "stalls"
@@ -53,5 +52,3 @@ class Food(Base):
 
     stall_id: Mapped[int] = mapped_column(ForeignKey("stalls.id"))
     stall: Mapped['Stall'] = relationship(back_populates="food_items", lazy=True)
-
-    orders_placed: Mapped[List["Order"]] = relationship(back_populates="food_ordered", lazy=True)

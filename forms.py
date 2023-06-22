@@ -30,3 +30,6 @@ class ResetPassForm(FlaskForm):
     ])
     confirm = PasswordField('Repeat Password', [validators.InputRequired()])
     submit = SubmitField('Reset Password')
+
+class CheckoutForm(FlaskForm):
+    submit = SubmitField('Checkout')

@@ -454,6 +454,6 @@ def decrease_quantity(index):
     return redirect('../checkout')
     
 if __name__ == "__main__":
-    # http_server = WSGIServer(("0.0.0.0",85),app)
+    # http_server = WSGIServer(("0.0.0.0",2011),app)
     # http_server.serve_forever()
     app.run(debug=True)

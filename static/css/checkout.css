@@ -607,6 +607,7 @@ header .icons #menu-bars{
 .checkout-container-1{
     width: 41.5%;
     background-color: #dfdfdfff;
+    height: 72rem;
     display: flex;
     flex-direction: column;
 }

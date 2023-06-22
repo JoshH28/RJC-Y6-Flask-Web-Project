@@ -596,16 +596,18 @@ header .icons #menu-bars{
 .checkout-container{
     width: 80%;
     margin: auto;
-    height: 40rem;
+    height: 100%;
     background-color: #fcfcfcff;
     position: relative;
+    display: flex;
 }
 
 .checkout-container-1{
     width: 41.5%;
-    height: 40rem;
+    height: 72rem;
     background-color: #dfdfdfff;
-    display: inline-block;
+    display: flex;
+    flex-direction: column;
 }
 
 .checkout-container-1 table{
@@ -628,9 +630,10 @@ header .icons #menu-bars{
 
 .checkout-container-2{
     width: 58%;
-    height: 40rem;
+    height: 72rem;
     background-color: #fcfcfcff;
-    display: inline-block;
+    display: flex;
+    flex-direction: column;
 }
 
 .checkout-container-2 table{

@@ -25,9 +25,8 @@ body{
 .container{
     width: 100vw;
     height: 100vh;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-gap :7rem;
+    display: flex;
+	justify-content: center;
     padding: 0 2rem;
 }
 
@@ -49,8 +48,49 @@ body{
 }
 
 form{
-	width: 360px;
+	width: 40rem;
+	background-color: rgb(189, 189, 189);
+	padding: 5rem;
+	border-radius: 20px;
+	box-shadow: 5px 5px 2px #888888;
 }
+
+.circle{
+	height: 20rem;
+	position:absolute;
+	left: -10%;
+	top: 80%;	
+}
+
+.circle2{
+	height: 30rem;
+	position:absolute;
+	left: 80%;
+	top: 50%;	
+}
+
+.circle3{
+	height: 10rem;
+	position:absolute;
+	left: 15%;
+	top: 10%;	
+}
+
+.circle4{
+	height: 5rem;
+	position:absolute;
+	left: 75%;
+	top: 20%;	
+}
+
+
+.circle5{
+	height: 3rem;
+	position:absolute;
+	left: 15%;
+	top: 60%;	
+}
+
 
 .login-content img{
     height: 100px;
@@ -108,7 +148,7 @@ form{
 	bottom: -2px;
 	width: 0%;
 	height: 2px;
-	background-color: #38d39f;
+	background-color: #388dd3;
 	transition: .4s;
 }
 
@@ -130,7 +170,7 @@ form{
 }
 
 .input-div.focus > .i > i{
-	color: #38d39f;
+	color: #388dd3;
 }
 
 .input-div > div > input{
@@ -162,7 +202,7 @@ a{
 }
 
 a:hover{
-	color: #38d39f;
+	color: #388dd3;
 }
 
 .btn{
@@ -172,7 +212,7 @@ a:hover{
 	border-radius: 25px;
 	outline: none;
 	border: none;
-	background-image: linear-gradient(to right, #32be8f, #38d39f, #32be8f);
+	background-image: linear-gradient(to right, #32a9be, #388dd3, #3253be);
 	background-size: 200%;
 	font-size: 1.2rem;
 	color: #fff;
@@ -186,6 +226,23 @@ a:hover{
 	background-position: right;
 }
 
+.design{
+	width:8rem;
+	position:fixed;
+	right:0;
+	top:0;
+	background-color: #3253be;
+	height:100%;
+}
+
+.design2{
+	width:100%;
+	position:fixed;
+	right:0;
+	top:0;
+	background-color: #388dd3;
+	height:2rem;
+}
 
 @media screen and (max-width: 1050px){
 	.container{

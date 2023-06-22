@@ -192,10 +192,15 @@ def checkout():
     return render_template('checkout.html')
 
 # Profile to edit username or password
-@app.route('/Profile', methods=['POST', 'GET'])
+@app.route('/profile', methods=['POST', 'GET'])
 @login_required
-def Profile():
+def profile():
     return render_template('profile.html')
+
+@app.route('/orders', methods=['POST', 'GET'])
+@login_required
+def orders():
+    return render_template('orders.html')
 
 @app.route('/ForgetPass', methods=['POST', 'GET'])
 def ForgetPass():

@@ -30,6 +30,7 @@ EMAIL_ADDRESS = os.getenv("EMAIL_ADDRESS")
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['WTF_CSRF_SECRET_KEY'] = os.getenv("SECRET_CSRF_KEY")
+app.config['SECURITY_PASSWORD_SALT'] = os.getenv("SECURITY_PASSWORD_SALT")
 app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
 app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024 * 5
 csrf = CSRFProtect(app)
@@ -164,12 +165,12 @@ def signup():
         session.add(new_User)
         session.commit()
 
-        subj = "Verification for your Coding Checklist account"
+        subj = "Verification for your Anderson Orders account"
         temp = "Hi "
         temp += new_username
-        temp += "!\n\nYou have been registered!\nClick on the attached link to verify your Coding Checklist Account\nNot you? Ignore this email and the account will not be created\nThis link will be removed after 5 minutes\n\nhttps://codingchecklist.com/verify/"
+        temp += "!\n\nYou have been registered!\nClick on the attached link to verify your Anderson Orders Account\nNot you? Ignore this email and the account will not be created\nThis link will be removed after 5 minutes\n\nhttps://canteen.haydenhow.com/verify/"
         temp += token
-        temp += "\n\nRegards,\nCoding Checklist"
+        temp += "\n\nRegards,\nAnderson Orders"
 
         send_email(new_email, subj, temp)
 
@@ -298,12 +299,12 @@ def ForgetPass():
         try:
             new_route = generate_confirmation_token(email)
 
-            subj = "Password reset link for your Coding Checklist account"
+            subj = "Password reset link for your Anderson Orders account"
             temp = "Hi "
             temp += User_query.username
-            temp += "!\n\nThe attached link is the link for your Coding Checklist account password reset\nNot you? Ignore this email and the password will not be resetted\nThis link will be removed after 5 minutes\n\nhttps://codingchecklist.com/passreset/"
+            temp += "!\n\nThe attached link is the link for your Anderson Orders account password reset\nNot you? Ignore this email and the password will not be resetted\nThis link will be removed after 5 minutes\n\nhttps://canteen.haydenhow.com/passreset/"
             temp += new_route
-            temp += "\n\nRegards,\nCoding Checklist"
+            temp += "\n\nRegards,\nAnderson Orders"
 
             send_email(email, subj, temp)
 

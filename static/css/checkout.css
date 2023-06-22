@@ -596,21 +596,26 @@ header .icons #menu-bars{
 .checkout-container{
     width: 80%;
     margin: auto;
-    height: 40rem;
+    /* height: 80rem; */
+    height:100%;
+    display:flex;
     background-color: #fcfcfcff;
     position: relative;
+    flex-wrap: wrap;
 }
 
 .checkout-container-1{
     width: 41.5%;
-    height: 32rem;
     background-color: #dfdfdfff;
-    display: inline-block;
+    height: 72rem;
+    display: flex;
+    flex-direction: column;
 }
 
 .checkout-container-1 table{
     text-align: center;
     width: 100%;
+    height:100%;
 }
 
 .checkout-container-1 th{
@@ -628,14 +633,16 @@ header .icons #menu-bars{
 
 .checkout-container-2{
     width: 58%;
-    height: 32rem;
+    height: 72rem;
     background-color: #fcfcfcff;
-    display: inline-block;
+    display: flex;
+    flex-direction: column;
 }
 
 .checkout-container-2 table{
     text-align: center;
     width: 100%;
+    height:100%;
 }
 
 .checkout-container-2 th{
@@ -664,7 +671,7 @@ header .icons #menu-bars{
     bottom: 0px;
     margin: none;
     padding: none;
-    position: absolute;
+    /* position: absolute; */
 }
 
 .checkout-container-3-1{

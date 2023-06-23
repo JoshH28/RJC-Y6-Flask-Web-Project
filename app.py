@@ -85,8 +85,7 @@ def login():
 
         # check if User alr exists
         User_query = session.scalars(select(User).where(User.username==new_username)).first()
-
-        if not User_query: # Username doesnt exist
+        if not User_query:
             return render_template('login.html', incorrect=True, form=form)
 
         salt = User_query.salt
@@ -168,7 +167,7 @@ def signup():
         subj = "Verification for your Anderson Orders account"
         temp = "Hi "
         temp += new_username
-        temp += "!\n\nYou have been registered!\nClick on the attached link to verify your Anderson Orders Account\nNot you? Ignore this email and the account will not be created\nThis link will be removed after 5 minutes\n\nhttps://canteen.haydenhow.com/verify/"
+        temp += "!\n\nYou have been registered!\nClick on the attached link to verify your Anderson Orders Account\nNot you? Ignore this email and the account will not be created\nThis link will be removed after 5 minutes\n\nhttps://{}/verify/".format(request.headers.get("X-Forwarded-Host"))
         temp += token
         temp += "\n\nRegards,\nAnderson Orders"
 
@@ -294,7 +293,7 @@ def ForgetPass():
 
         User_query = session.scalars(select(User).where(User.user_email==email)).first()
         if not User_query:
-            return render_template('ForgetPass.html', incorrect=True)
+            return render_template('ForgetPass.html', incorrect=True, form=form)
 
         try:
             new_route = generate_confirmation_token(email)
@@ -302,7 +301,7 @@ def ForgetPass():
             subj = "Password reset link for your Anderson Orders account"
             temp = "Hi "
             temp += User_query.username
-            temp += "!\n\nThe attached link is the link for your Anderson Orders account password reset\nNot you? Ignore this email and the password will not be resetted\nThis link will be removed after 5 minutes\n\nhttps://canteen.haydenhow.com/passreset/"
+            temp += "!\n\nThe attached link is the link for your Anderson Orders account password reset\nNot you? Ignore this email and the password will not be resetted\nThis link will be removed after 5 minutes\n\nhttps://{}/passreset/".format(request.headers.get("X-Forwarded-Host"))
             temp += new_route
             temp += "\n\nRegards,\nAnderson Orders"
 

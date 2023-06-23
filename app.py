@@ -20,7 +20,7 @@ from itsdangerous import URLSafeTimedSerializer
 # from gevent.pywsgi import WSGIServer
 
 if os.name != "nt":
-    os.chdir(os.path.dir(__file__))
+    os.chdir(os.path.dirname(__file__))
 
 load_dotenv()
 

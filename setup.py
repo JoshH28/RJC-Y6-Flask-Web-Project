@@ -4,8 +4,8 @@ import subprocess
 if os.path.exists('database.db'):
     os.remove('database.db')
 
-subprocess.call('python connect.py')
-subprocess.call('python create_tables.py')
+os.system('python connect.py')
+os.system('python create_tables.py')
 
 from sqlalchemy.orm import Session
 from connect import engine
@@ -68,4 +68,4 @@ for _ in range(no_of_stalls):
 # session.add(new_User)
 session.commit()
 
-subprocess.call('python app.py')
+os.system('python app.py')
